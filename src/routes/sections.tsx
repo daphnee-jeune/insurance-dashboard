@@ -31,29 +31,34 @@ const renderFallback = (
 );
 
 export function Router() {
+  const isAuthenticated = true
+
   return useRoutes([
+    // Only rener dashboard view if authenticated
     {
-      path: 'dashboard',
-      element: (
+      element: isAuthenticated ? (
         <DashboardLayout>
           <Suspense fallback={renderFallback}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
+      ) : (
+        <Navigate to="/sign-in" replace />
       ),
       children: [
-        { element: <HomePage />, index: true },
+        { path: '/', element: <HomePage />, index: true }, // Dashboard/Home is default after login
         { path: 'patients', element: <UserPage /> },
       ],
     },
     {
-      path: '/',
+      path: 'sign-in',
       element: (
         <AuthLayout>
           <SignInPage />
         </AuthLayout>
       ),
     },
+    // 404 Route
     {
       path: '404',
       element: <Page404 />,
