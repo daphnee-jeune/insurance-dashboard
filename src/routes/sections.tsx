@@ -11,10 +11,8 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 // ----------------------------------------------------------------------
 
 export const HomePage = lazy(() => import('src/pages/home'));
-export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
-export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 // ----------------------------------------------------------------------
@@ -33,20 +31,23 @@ const renderFallback = (
 );
 
 export function Router() {
+  const isAuthenticated = true
+
   return useRoutes([
+    // Only rener dashboard view if authenticated
     {
-      element: (
+      element: isAuthenticated ? (
         <DashboardLayout>
           <Suspense fallback={renderFallback}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
+      ) : (
+        <Navigate to="/sign-in" replace />
       ),
       children: [
-        { element: <HomePage />, index: true },
-        { path: 'user', element: <UserPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { path: '/', element: <HomePage />, index: true }, // Dashboard/Home is default after login
+        { path: 'patients', element: <UserPage /> },
       ],
     },
     {
@@ -57,6 +58,7 @@ export function Router() {
         </AuthLayout>
       ),
     },
+    // 404 Route
     {
       path: '404',
       element: <Page404 />,
