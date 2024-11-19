@@ -2,7 +2,7 @@ import {
   _id,
   _price,
   _times,
-  _company,
+  _address,
   _boolean,
   _fullName,
   _taskNames,
@@ -24,7 +24,7 @@ export const _myAccount = {
 export const _users = [...Array(24)].map((_, index) => ({
   id: _id(index),
   name: _fullName(index),
-  company: _company(index),
+  address: _address(index),
   isVerified: _boolean(index),
   avatarUrl: `/assets/images/avatar/avatar-${index + 1}.webp`,
   statuses: ['Inquiry', 'Onboarding', 'Active', 'Churned'],
