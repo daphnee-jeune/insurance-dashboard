@@ -27,20 +27,21 @@ export const _users = [...Array(24)].map((_, index) => ({
   company: _company(index),
   isVerified: _boolean(index),
   avatarUrl: `/assets/images/avatar/avatar-${index + 1}.webp`,
-  status: index % 4 ? 'active' : 'banned',
-  role:
+  statuses: ['Inquiry', 'Onboarding', 'Active', 'Churned'],
+  status: index % 3 ? 'Active' : index % 5 ? 'Onboarding' : index % 5 ? 'Inquiry' : 'Churned',
+  dob:
     [
-      'Leader',
-      'Hr Manager',
-      'UI Designer',
-      'UX Designer',
-      'UI/UX Designer',
-      'Project Manager',
-      'Backend Developer',
-      'Full Stack Designer',
-      'Front End Developer',
-      'Full Stack Developer',
-    ][index] || 'UI Designer',
+      '06/09/1995',
+      '01/01/2000',
+      '09/18/1992',
+      '01/13/1962',
+      '05/04/1963',
+      '08/30/1996',
+      '03/06/1995',
+      '01/29/1994',
+      '10/18t/1990',
+      '07/19/1994',
+    ][index] || '01/01/1995',
 }));
 
 // ----------------------------------------------------------------------
@@ -76,7 +77,6 @@ const COLORS = [
 
 export const _products = [...Array(24)].map((_, index) => {
   const setIndex = index + 1;
-
   return {
     id: _id(index),
     price: _price(index),
