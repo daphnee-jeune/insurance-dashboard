@@ -1,39 +1,87 @@
 import { useState } from 'react';
-import { TextField, Button, Grid, Typography, Box, Modal, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Grid,
+  Typography,
+  Box,
+  Modal,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+} from '@mui/material';
+
+type Address = {
+  street: string;
+  address2: string;
+  state: string;
+  zipcode: string;
+  country: string;
+}
+
+type ExtraField = {
+  label: string;
+  value: string;
+}
+
+type FormData = {
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  address: Address;
+  statuses: string[];
+  extraFields: ExtraField[];
+}
+
+type NewPatientFormProps = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
 
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 600,
+  width: 800,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
 };
-
-type NewPatientFormProps = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-};
 const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
-  const statusOptions = ["Inquiry", "Onboarding", "Active", "Churned"];
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    address: '',
+  const statusOptions = ['Inquiry', 'Onboarding', 'Active', 'Churned'];
+  const [formData, setFormData] = useState<FormData>({
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    address: {
+      street: "",
+      address2: "",
+      state: "",
+      zipcode: "",
+      country: "",
+    },
     statuses: [],
+    extraFields: [],
   });
   const handleClose = () => setOpen(false);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Form Data Submitted:', formData);
+
+  const handleAddressChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      address: { ...prev.address, [name]: value },
+    }));
   };
+
   const handleCheckboxChange = (status: string) => {
     setFormData((prev) => {
       const { statuses } = prev;
@@ -43,6 +91,12 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
       return { ...prev, statuses: updatedStatuses };
     });
   };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('Form Data Submitted:', formData);
+  };
+
   return (
     <div>
       <Modal
@@ -51,45 +105,99 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <Typography variant="h5" gutterBottom>
-            Patient registration form
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="First Name"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Last Name"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Date of Birth"
-                  name="dateOfBirth"
-                  type="date"
-                  value={formData.dateOfBirth}
-                  onChange={handleChange}
-                  InputLabelProps={{ shrink: true }}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
+       <Box sx={style}>
+        <Typography variant="h5" gutterBottom>
+          Patient registration form
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="First Name"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Last Name"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Date of Birth"
+                name="dateOfBirth"
+                type="date"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                InputLabelProps={{ shrink: true }}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom>
+                Address
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Street Address"
+                name="street"
+                value={formData.address.street}
+                onChange={handleAddressChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Address 2"
+                name="address2"
+                value={formData.address.address2}
+                onChange={handleAddressChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="State"
+                name="state"
+                value={formData.address.state}
+                onChange={handleAddressChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Zip Code"
+                name="zipcode"
+                value={formData.address.zipcode}
+                onChange={handleAddressChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Country"
+                name="country"
+                value={formData.address.country}
+                onChange={handleAddressChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
               <Typography variant="subtitle1" gutterBottom>
                 Status
               </Typography>
@@ -108,26 +216,19 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
                 ))}
               </FormGroup>
             </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  multiline
-                  rows={4}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="primary" fullWidth>
-                  Submit
-                </Button>
-              </Grid>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
+                Submit
+              </Button>
             </Grid>
-          </form>
-        </Box>
+          </Grid>
+        </form>
+      </Box>
       </Modal>
     </div>
   );
