@@ -24,7 +24,6 @@ export const _users = [...Array(24)].map((_, index) => ({
   id: _id(index),
   name: _fullName(index),
   address: _address(index),
-  isVerified: _boolean(index),
   avatarUrl: `/assets/images/avatar/avatar-${index + 1}.webp`,
   statuses: ['Inquiry', 'Onboarding', 'Active', 'Churned'],
   status: index % 3 ? 'Active' : index % 5 ? 'Onboarding' : index % 5 ? 'Inquiry' : 'Churned',

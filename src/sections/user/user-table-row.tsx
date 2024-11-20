@@ -22,7 +22,6 @@ export type UserProps = {
   status: string;
   address: string;
   avatarUrl: string;
-  isVerified: boolean;
 };
 
 type UserTableRowProps = {
@@ -59,14 +58,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         <TableCell>{row.address}</TableCell>
 
         <TableCell>{row.dob}</TableCell>
-
-        <TableCell align="center">
-          {row.isVerified ? (
-            <Iconify width={22} icon="solar:check-circle-bold" sx={{ color: 'success.main' }} />
-          ) : (
-            '-'
-          )}
-        </TableCell>
 
         <TableCell>
           <Label color={(row.status === 'Churned' && 'error') || (row.status === 'Onboarding' && 'warning') || (row.status === 'Inquiry' && 'info') || 'success'}>{row.status}</Label>
