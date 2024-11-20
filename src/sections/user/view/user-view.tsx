@@ -22,6 +22,8 @@ import { TableEmptyRows } from '../table-empty-rows';
 import { UserTableToolbar } from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
+import NewPatientForm from '../../../layouts/components/new-patient-form';
+
 import type { UserProps } from '../user-table-row';
 
 // ----------------------------------------------------------------------
@@ -30,7 +32,7 @@ export function UserView() {
   const table = useTable();
 
   const [filterName, setFilterName] = useState('');
-
+  const [open, setOpen] = useState(false);
   const dataFiltered: UserProps[] = applyFilter({
     inputData: _users,
     comparator: getComparator(table.order, table.orderBy),
@@ -38,7 +40,7 @@ export function UserView() {
   });
 
   const notFound = !dataFiltered.length && !!filterName;
-
+  const handleOpen = () => setOpen(true);
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -49,11 +51,12 @@ export function UserView() {
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="mingcute:add-line" />}
+          onClick={handleOpen}
         >
           New patient
         </Button>
       </Box>
-
+      {open && <NewPatientForm open={open} setOpen={setOpen} />}
       <Card>
         <UserTableToolbar
           numSelected={table.selected.length}
