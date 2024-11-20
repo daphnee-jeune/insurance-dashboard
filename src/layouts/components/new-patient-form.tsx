@@ -91,10 +91,17 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
   const addExtraField = () => {
     setFormData((prev) => ({
       ...prev,
-      extraFields: [...prev.extraFields, { label: "", value: "" }],
+      extraFields: [...prev.extraFields, { label: '', value: '' }],
     }));
   };
-
+  const handleExtraFieldChange = (index: number, field: keyof ExtraField, value: string) => {
+    const updatedFields = [...formData.extraFields];
+    updatedFields[index][field] = value;
+    setFormData((prev) => ({
+      ...prev,
+      extraFields: updatedFields,
+    }));
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('Form Data Submitted:', formData);
@@ -223,14 +230,26 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
                 {formData.extraFields.map((field, index) => (
                   <Grid container spacing={1} key={index} sx={{ mb: 2 }}>
                     <Grid item xs={6}>
-                      <TextField fullWidth label="Label" value={field.label} />
+                      <TextField
+                        fullWidth
+                        label="Label"
+                        value={field.label}
+                        onChange={(e) => handleExtraFieldChange(index, 'label', e.target.value)}
+                      />
                     </Grid>
                     <Grid item xs={6}>
-                      <TextField fullWidth label="Value" value={field.value} />
+                      <TextField
+                        fullWidth
+                        label="Value"
+                        value={field.value}
+                        onChange={(e) => handleExtraFieldChange(index, 'value', e.target.value)}
+                      />
                     </Grid>
                   </Grid>
                 ))}
-                <IconButton color="primary" onClick={addExtraField}>+</IconButton>
+                <IconButton color="primary" onClick={addExtraField}>
+                  +
+                </IconButton>
               </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary" fullWidth>
