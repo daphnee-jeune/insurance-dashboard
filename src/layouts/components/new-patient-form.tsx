@@ -40,7 +40,7 @@ type NewPatientFormProps = {
 };
 
 const style = {
-  mt: 4,
+  m: 4,
   p: 4,
   height: '80vh',
   bgcolor: 'background.paper',
@@ -86,6 +86,13 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
         : [...statuses, status]; // Add if not checked
       return { ...prev, statuses: updatedStatuses };
     });
+  };
+
+  const addExtraField = () => {
+    setFormData((prev) => ({
+      ...prev,
+      extraFields: [...prev.extraFields, { label: "", value: "" }],
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -223,7 +230,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
                     </Grid>
                   </Grid>
                 ))}
-                <IconButton color="primary">+</IconButton>
+                <IconButton color="primary" onClick={addExtraField}>+</IconButton>
               </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary" fullWidth>
