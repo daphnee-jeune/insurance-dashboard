@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 
 import { _tasks, _posts, _timeline } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { UserView } from 'src/sections/user/view';
 
 import { AnalyticsTasks } from '../analytics-tasks';
 import { AnalyticsCurrentVisits } from '../analytics-current-visits';
@@ -75,7 +76,7 @@ export function OverviewAnalyticsView() {
             }}
           />
         </Grid>
-
+        <UserView />
         <Grid xs={12} md={6} lg={4}>
           <AnalyticsCurrentVisits
             title="Current visits"
