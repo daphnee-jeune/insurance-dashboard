@@ -13,7 +13,7 @@ import {
 // ----------------------------------------------------------------------
 
 export const _myAccount = {
-  displayName: 'Jaydon Frankie',
+  displayName: 'Miguel',
   email: 'demo@minimals.cc',
   photoURL: '/assets/images/avatar/avatar-25.webp',
 };

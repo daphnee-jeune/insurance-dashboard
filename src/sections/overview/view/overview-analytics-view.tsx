@@ -13,13 +13,11 @@ import { AnalyticsTrafficBySite } from '../analytics-traffic-by-site';
 import { AnalyticsCurrentSubject } from '../analytics-current-subject';
 import { AnalyticsConversionRates } from '../analytics-conversion-rates';
 
-// ----------------------------------------------------------------------
-
 export function OverviewAnalyticsView() {
   return (
     <DashboardContent maxWidth="xl">
       <Typography variant="h4" sx={{ mb: { xs: 3, md: 5 } }}>
-        Hi, Welcome back 👋
+        Shigna Insurance Portal
       </Typography>
 
       <Grid container spacing={3}>
@@ -38,9 +36,9 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="New users"
+            title="New patients"
             percent={-0.1}
-            total={1352831}
+            total={2000}
             color="secondary"
             icon={<img alt="icon" src="/assets/icons/glass/ic-glass-users.svg" />}
             chart={{
