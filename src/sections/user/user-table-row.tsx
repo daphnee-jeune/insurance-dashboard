@@ -103,6 +103,10 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
           }}
         >
           <MenuItem onClick={handleClosePopover}>
+            <Iconify icon="ic:baseline-add" />
+            More details
+          </MenuItem>
+          <MenuItem onClick={handleClosePopover}>
             <Iconify icon="solar:pen-bold" />
             Edit
           </MenuItem>
