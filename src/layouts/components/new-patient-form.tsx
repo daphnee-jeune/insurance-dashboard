@@ -11,6 +11,8 @@ import {
   Checkbox,
   IconButton,
 } from '@mui/material';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
 
 type Address = {
   street: string;
@@ -102,9 +104,36 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
       extraFields: updatedFields,
     }));
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+  // database reference
+  const dbref = collection(db, 'patientFormData');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form Data Submitted:', formData);
+    try {
+      await addDoc(dbref, formData);
+      // Show success message
+      console.log('Success');
+      setOpen(false);
+      // Reset form data
+      setFormData({
+        firstName: '',
+        lastName: '',
+        dateOfBirth: '',
+        address: {
+          street: '',
+          address2: '',
+          state: '',
+          zipcode: '',
+          country: '',
+        },
+        statuses: [],
+        extraFields: [],
+      });
+    } catch (err) {
+      // show error toast
+      console.log('Error');
+    }
   };
 
   return (
