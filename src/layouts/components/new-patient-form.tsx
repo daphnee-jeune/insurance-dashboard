@@ -27,7 +27,7 @@ type ExtraField = {
   value: string;
 };
 
-type FormData = {
+export type FormData = {
   firstName: string;
   lastName: string;
   dateOfBirth: string;

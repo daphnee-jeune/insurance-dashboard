@@ -1,4 +1,4 @@
-import type { PatientInfoProps } from './patients-table-row';
+import type { PatientDetails } from './view/useFetchPatients';
 
 // ----------------------------------------------------------------------
 
@@ -53,9 +53,9 @@ export function getComparator<Key extends keyof any>(
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  inputData: PatientInfoProps[];
+  inputData: PatientDetails[];
   filterName: string;
-  comparator: (a: any, b: any) => number;
+  comparator: (a: PatientDetails, b: PatientDetails) => number;
 };
 
 export function applyFilter({ inputData, comparator, filterName }: ApplyFilterProps) {
@@ -71,7 +71,8 @@ export function applyFilter({ inputData, comparator, filterName }: ApplyFilterPr
 
   if (filterName) {
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (patient) =>
+        `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 
