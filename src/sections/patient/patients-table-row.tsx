@@ -1,17 +1,21 @@
 import { useState, useCallback } from 'react';
-
-import Box from '@mui/material/Box';
-import Popover from '@mui/material/Popover';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import MenuList from '@mui/material/MenuList';
-import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
+import {
+  TextField,
+  Button,
+  Popover,
+  TableRow,
+  TableCell,
+  Box,
+  MenuList,
+  MenuItem,
+  Checkbox,
+  IconButton,
+} from '@mui/material';
+import { menuItemClasses } from '@mui/material/MenuItem';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { PatientDetails } from './view/useFetchPatients';
 
 import { db } from '../../firebase';
@@ -24,6 +28,8 @@ type PatientTableRowProps = {
 
 export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
+  const [isInEditMode, setIsInEditMode] = useState(false);
+  const [editedRow, setEditedRow] = useState(row);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -32,6 +38,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
   }, []);
+
   const handleDeletePatientRecord = async (documentId: string) => {
     try {
       const docRef = doc(db, "patientFormData", documentId);
@@ -43,6 +50,29 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
     }
   };
 
+  const handleEditRow = () => {
+    setIsInEditMode(true);
+    handleClosePopover();
+  };
+
+  const handleSaveRow = async () => {
+    try {
+      const docRef = doc(db, 'patientFormData', row.id);
+      await updateDoc(docRef, editedRow);
+      setIsInEditMode(false);
+      console.log('Patient record updated successfully');
+    } catch (error) {
+      console.error('Error updating record: ', error);
+    }
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setEditedRow((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -50,39 +80,88 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell>
 
+        {/* Editable fields for Name */}
         <TableCell component="th" scope="row">
           <Box gap={2} display="flex" alignItems="center">
-            {row.firstName} {row.lastName}
+            {isInEditMode ? (
+              <>
+                <TextField
+                  value={editedRow.firstName}
+                  onChange={(e) => handleChange('firstName', e.target.value)}
+                  size="small"
+                />
+                <TextField
+                  value={editedRow.lastName}
+                  onChange={(e) => handleChange('lastName', e.target.value)}
+                  size="small"
+                />
+              </>
+            ) : (
+              `${row.firstName} ${row.lastName}`
+            )}
           </Box>
         </TableCell>
 
-        <TableCell>{`${row.address.street}, ${row.address.state} ${row.address.zipcode} ${row.address.country}`}</TableCell>
+        {/* Editable Address */}
+        <TableCell>
+          {isInEditMode ? (
+            <TextField
+              fullWidth
+              value={editedRow.address.street}
+              onChange={(e) => handleChange('address.street', e.target.value)}
+              size="small"
+            />
+          ) : (
+            `${row.address.street}, ${row.address.state} ${row.address.zipcode} ${row.address.country}`
+          )}
+        </TableCell>
 
-        <TableCell>{row.dateOfBirth}</TableCell>
+        {/* Editable DOB */}
+        <TableCell>
+          {isInEditMode ? (
+            <TextField
+              type="date"
+              value={editedRow.dateOfBirth}
+              onChange={(e) => handleChange('dateOfBirth', e.target.value)}
+              size="small"
+            />
+          ) : (
+            row.dateOfBirth
+          )}
+        </TableCell>
 
+        {/* Status remains static */}
         <TableCell>
           <Label
             color={
               row.statuses.includes('Churned')
                 ? 'error'
                 : row.statuses.includes('Onboarding')
-                  ? 'warning'
-                  : row.statuses.includes('Inquiry')
-                    ? 'info'
-                    : 'success'
+                ? 'warning'
+                : row.statuses.includes('Inquiry')
+                ? 'info'
+                : 'success'
             }
           >
             {row.statuses.map((status) => status)}
           </Label>
         </TableCell>
 
+        {/* Action buttons */}
         <TableCell align="right">
-          <IconButton onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          {isInEditMode ? (
+            <Button variant="contained" color="primary" onClick={handleSaveRow}>
+              Save
+            </Button>
+          ) : (
+            <IconButton onClick={handleOpenPopover}>
+              <Iconify icon="eva:more-vertical-fill" />
+            </IconButton>
+          )}
         </TableCell>
       </TableRow>
 
+      {/* Popover Menu */}
       <Popover
         open={!!openPopover}
         anchorEl={openPopover}
@@ -110,7 +189,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
             <Iconify icon="ic:baseline-add" />
             More details
           </MenuItem>
-          <MenuItem onClick={handleClosePopover}>
+          <MenuItem onClick={handleEditRow}>
             <Iconify icon="solar:pen-bold" />
             Edit
           </MenuItem>
