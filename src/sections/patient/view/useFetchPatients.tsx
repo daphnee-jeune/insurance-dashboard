@@ -16,7 +16,7 @@ const usePatients = () => {
   const fetchPatients = useCallback(async () => {
     setLoading(true);
     setError(null);
-
+    // Note: set success and error toasts
     try {
       const querySnapshot = await getDocs(collection(db, 'patientFormData'));
 
