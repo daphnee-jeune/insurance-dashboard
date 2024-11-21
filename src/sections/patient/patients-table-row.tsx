@@ -58,7 +58,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
   const handleSaveRow = async () => {
     try {
       const docRef = doc(db, 'patientFormData', row.id);
-      await updateDoc(docRef, editedRow);
+      await updateDoc(docRef, { ...editedRow, id: docRef.id });
       setIsInEditMode(false);
       console.log('Patient record updated successfully');
     } catch (error) {
