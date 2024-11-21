@@ -43,7 +43,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           </Box>
         </TableCell>
 
-        <TableCell>{row.address.street}</TableCell>
+        <TableCell>{`${row.address.street}, ${row.address.state} ${row.address.zipcode} ${row.address.country}`}</TableCell>
 
         <TableCell>{row.dateOfBirth}</TableCell>
 
