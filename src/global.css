@@ -54,3 +54,9 @@ input[type='number']::-webkit-inner-spin-button {
   margin: 0;
   -webkit-appearance: none;
 }
+
+.edit-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
