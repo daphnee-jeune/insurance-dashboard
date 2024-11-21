@@ -15,23 +15,22 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export type UserProps = {
+export type PatientInfoProps = {
   id: string;
   name: string;
   dob: string;
   status: string;
   address: string;
   avatarUrl: string;
-  isVerified: boolean;
 };
 
-type UserTableRowProps = {
-  row: UserProps;
+type PatientTableRowProps = {
+  row: PatientInfoProps;
   selected: boolean;
   onSelectRow: () => void;
 };
 
-export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
+export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -60,16 +59,17 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
 
         <TableCell>{row.dob}</TableCell>
 
-        <TableCell align="center">
-          {row.isVerified ? (
-            <Iconify width={22} icon="solar:check-circle-bold" sx={{ color: 'success.main' }} />
-          ) : (
-            '-'
-          )}
-        </TableCell>
-
         <TableCell>
-          <Label color={(row.status === 'Churned' && 'error') || (row.status === 'Onboarding' && 'warning') || (row.status === 'Inquiry' && 'info') || 'success'}>{row.status}</Label>
+          <Label
+            color={
+              (row.status === 'Churned' && 'error') ||
+              (row.status === 'Onboarding' && 'warning') ||
+              (row.status === 'Inquiry' && 'info') ||
+              'success'
+            }
+          >
+            {row.status}
+          </Label>
         </TableCell>
 
         <TableCell align="right">

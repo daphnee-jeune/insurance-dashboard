@@ -16,24 +16,24 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
 import { TableNoData } from '../table-no-data';
-import { UserTableRow } from '../user-table-row';
-import { UserTableHead } from '../user-table-head';
+import { PatientsTableRow } from '../patients-table-row';
+import { PatientsTableHead } from '../patients-table-head';
 import { TableEmptyRows } from '../table-empty-rows';
-import { UserTableToolbar } from '../user-table-toolbar';
+import { PatientsTableToolbar } from '../patients-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 import NewPatientForm from '../../../layouts/components/new-patient-form';
 
-import type { UserProps } from '../user-table-row';
+import type { PatientInfoProps } from '../patients-table-row';
 
 // ----------------------------------------------------------------------
 
-export function UserView() {
+export function PatientsView() {
   const table = useTable();
 
   const [filterName, setFilterName] = useState('');
   const [open, setOpen] = useState(false);
-  const dataFiltered: UserProps[] = applyFilter({
+  const dataFiltered: PatientInfoProps[] = applyFilter({
     inputData: _users,
     comparator: getComparator(table.order, table.orderBy),
     filterName,
@@ -58,7 +58,7 @@ export function UserView() {
       </Box>
       {open && <NewPatientForm open={open} setOpen={setOpen} />}
       <Card>
-        <UserTableToolbar
+        <PatientsTableToolbar
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +70,7 @@ export function UserView() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
+              <PatientsTableHead
                 order={table.order}
                 orderBy={table.orderBy}
                 rowCount={_users.length}
@@ -86,7 +86,6 @@ export function UserView() {
                   { id: 'name', label: 'Name' },
                   { id: 'address', label: 'Address' },
                   { id: 'dob', label: 'Date of birth' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
                   { id: 'status', label: 'Status' },
                   { id: '' },
                 ]}
@@ -98,7 +97,7 @@ export function UserView() {
                     table.page * table.rowsPerPage + table.rowsPerPage
                   )
                   .map((row) => (
-                    <UserTableRow
+                    <PatientsTableRow
                       key={row.id}
                       row={row}
                       selected={table.selected.includes(row.id)}
