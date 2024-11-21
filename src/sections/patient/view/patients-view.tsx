@@ -42,7 +42,6 @@ export function PatientsView() {
   const notFound = !filteredPatients?.length && !!filterName;
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   return (
     <DashboardContent>
