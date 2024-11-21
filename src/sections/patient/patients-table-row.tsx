@@ -11,7 +11,10 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { doc, deleteDoc } from "firebase/firestore";
 import { PatientDetails } from './view/useFetchPatients';
+
+import { db } from '../../firebase';
 
 type PatientTableRowProps = {
   row: PatientDetails;
@@ -29,6 +32,16 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
   }, []);
+  const handleDeletePatientRecord = async (documentId: string) => {
+    try {
+      const docRef = doc(db, "patientFormData", documentId);
+      await deleteDoc(docRef);
+      setOpenPopover(null);
+      console.log(`Document with ID: ${documentId} has been successfully deleted.`);
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+    }
+  };
 
   return (
     <>
@@ -102,7 +115,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
             Edit
           </MenuItem>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={() => handleDeletePatientRecord(row.id)} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete
           </MenuItem>
