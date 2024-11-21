@@ -114,7 +114,7 @@ export function PatientsView() {
 
                 <TableEmptyRows
                   height={68}
-                  emptyRows={Number(table.rowsPerPage - filteredPatients?.length)}
+                  emptyRows={table.rowsPerPage - filteredPatients.length}
                 />
 
                 {notFound && <TableNoData searchQuery={filterName} />}
