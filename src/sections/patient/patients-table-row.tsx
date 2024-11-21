@@ -15,7 +15,7 @@ import { menuItemClasses } from '@mui/material/MenuItem';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from './view/useFetchPatients';
 
 import { db } from '../../firebase';
@@ -41,12 +41,12 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
 
   const handleDeletePatientRecord = async (documentId: string) => {
     try {
-      const docRef = doc(db, "patientFormData", documentId);
+      const docRef = doc(db, 'patientFormData', documentId);
       await deleteDoc(docRef);
       setOpenPopover(null);
       console.log(`Document with ID: ${documentId} has been successfully deleted.`);
     } catch (error) {
-      console.error("Error deleting document: ", error);
+      console.error('Error deleting document: ', error);
     }
   };
 
@@ -137,10 +137,10 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
               row.statuses.includes('Churned')
                 ? 'error'
                 : row.statuses.includes('Onboarding')
-                ? 'warning'
-                : row.statuses.includes('Inquiry')
-                ? 'info'
-                : 'success'
+                  ? 'warning'
+                  : row.statuses.includes('Inquiry')
+                    ? 'info'
+                    : 'success'
             }
           >
             {row.statuses.map((status) => status)}
@@ -150,9 +150,14 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         {/* Action buttons */}
         <TableCell align="right">
           {isInEditMode ? (
-            <Button variant="contained" color="primary" onClick={handleSaveRow}>
-              Save
-            </Button>
+            <div className='edit-button-container'>
+              <Button variant="contained" color="error" onClick={() => setIsInEditMode(false)} style={{ marginRight: '10px'}}>
+                X
+              </Button>
+              <Button variant="contained" color="primary" onClick={handleSaveRow}>
+                Save
+              </Button>
+            </div>
           ) : (
             <IconButton onClick={handleOpenPopover}>
               <Iconify icon="eva:more-vertical-fill" />
