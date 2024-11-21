@@ -21,7 +21,7 @@ export function OverviewAnalyticsView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Weekly sales"
+            title="Weekly leads"
             percent={2.6}
             total={714000}
             icon={<img alt="icon" src="/assets/icons/glass/ic-glass-bag.svg" />}
@@ -48,7 +48,7 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Purchase orders"
+            title="Prescription sales"
             percent={2.8}
             total={1723315}
             color="warning"
@@ -62,7 +62,7 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Messages"
+            title="Interactions"
             percent={3.6}
             total={234}
             color="error"
