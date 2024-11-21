@@ -3,7 +3,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { FormData } from '../../../layouts/components/new-patient-form';
 
-interface PatientDetails extends FormData {
+export interface PatientDetails extends FormData {
   id: string;
 }
 

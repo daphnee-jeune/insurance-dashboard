@@ -20,27 +20,30 @@ import { PatientsTableRow } from '../patients-table-row';
 import { PatientsTableHead } from '../patients-table-head';
 import { TableEmptyRows } from '../table-empty-rows';
 import { PatientsTableToolbar } from '../patients-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../utils';
 
 import NewPatientForm from '../../../layouts/components/new-patient-form';
 
-import type { PatientInfoProps } from '../patients-table-row';
+import useFetchPatients from './useFetchPatients';
 
-// ----------------------------------------------------------------------
+
 
 export function PatientsView() {
   const table = useTable();
+  const { patientDetails, loading, error } = useFetchPatients();
 
   const [filterName, setFilterName] = useState('');
   const [open, setOpen] = useState(false);
-  const dataFiltered: PatientInfoProps[] = applyFilter({
-    inputData: _users,
-    comparator: getComparator(table.order, table.orderBy),
-    filterName,
-  });
 
-  const notFound = !dataFiltered.length && !!filterName;
+  // Filter patients based on the filterName state
+  const filteredPatients = patientDetails?.filter((patient) =>
+    `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(filterName.toLowerCase())
+  );
+
+  const notFound = !filteredPatients?.length && !!filterName;
+
   const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -73,13 +76,13 @@ export function PatientsView() {
               <PatientsTableHead
                 order={table.order}
                 orderBy={table.orderBy}
-                rowCount={_users.length}
+                rowCount={patientDetails?.length || 0}
                 numSelected={table.selected.length}
                 onSort={table.onSort}
                 onSelectAllRows={(checked) =>
                   table.onSelectAllRows(
                     checked,
-                    _users.map((user) => user.id)
+                    patientDetails?.map((patient) => `${patient.firstName} ${patient.lastName}`) || []
                   )
                 }
                 headLabel={[
@@ -91,23 +94,27 @@ export function PatientsView() {
                 ]}
               />
               <TableBody>
-                {dataFiltered
-                  .slice(
+                {filteredPatients
+                  ?.slice(
                     table.page * table.rowsPerPage,
                     table.page * table.rowsPerPage + table.rowsPerPage
                   )
                   .map((row) => (
                     <PatientsTableRow
-                      key={row.id}
+                      key={row.firstName + row.lastName}
                       row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
+                      selected={table.selected.includes(
+                        `${row.firstName} ${row.lastName}`
+                      )}
+                      onSelectRow={() =>
+                        table.onSelectRow(`${row.firstName} ${row.lastName}`)
+                      }
                     />
                   ))}
 
                 <TableEmptyRows
                   height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, _users.length)}
+                  emptyRows={table.rowsPerPage - filteredPatients?.length}
                 />
 
                 {notFound && <TableNoData searchQuery={filterName} />}
@@ -119,7 +126,7 @@ export function PatientsView() {
         <TablePagination
           component="div"
           page={table.page}
-          count={_users.length}
+          count={filteredPatients?.length || 0}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
           rowsPerPageOptions={[5, 10, 25]}

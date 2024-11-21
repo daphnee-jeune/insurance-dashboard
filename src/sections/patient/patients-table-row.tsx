@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -12,20 +11,10 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-
-// ----------------------------------------------------------------------
-
-export type PatientInfoProps = {
-  id: string;
-  name: string;
-  dob: string;
-  status: string;
-  address: string;
-  avatarUrl: string;
-};
+import { PatientDetails } from './view/useFetchPatients';
 
 type PatientTableRowProps = {
-  row: PatientInfoProps;
+  row: PatientDetails;
   selected: boolean;
   onSelectRow: () => void;
 };
@@ -50,25 +39,27 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
 
         <TableCell component="th" scope="row">
           <Box gap={2} display="flex" alignItems="center">
-            <Avatar alt={row.name} src={row.avatarUrl} />
-            {row.name}
+            {row.firstName} {row.lastName}
           </Box>
         </TableCell>
 
-        <TableCell>{row.address}</TableCell>
+        <TableCell>{row.address.street}</TableCell>
 
-        <TableCell>{row.dob}</TableCell>
+        <TableCell>{row.dateOfBirth}</TableCell>
 
         <TableCell>
           <Label
             color={
-              (row.status === 'Churned' && 'error') ||
-              (row.status === 'Onboarding' && 'warning') ||
-              (row.status === 'Inquiry' && 'info') ||
-              'success'
+              row.statuses.includes('Churned')
+                ? 'error'
+                : row.statuses.includes('Onboarding')
+                  ? 'warning'
+                  : row.statuses.includes('Inquiry')
+                    ? 'info'
+                    : 'success'
             }
           >
-            {row.status}
+            {row.statuses.map((status) => status)}
           </Label>
         </TableCell>
 
