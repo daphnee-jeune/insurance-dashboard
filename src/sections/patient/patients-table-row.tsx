@@ -164,8 +164,8 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         <TableCell>
           {isInEditMode ? (
             <Select
-              value={editedRow.statuses}
-              onChange={(e) => handleChange('statuses', [e.target.value])}
+              value={editedRow.statuses} // Use the first value of `statuses` if it's an array
+              onChange={(e) => handleChange('statuses', [e.target.value])} // Wrap the selected value in an array
               renderValue={(selectedStatus) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   <Chip label={selectedStatus} />
