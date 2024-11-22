@@ -10,6 +10,11 @@ import {
   MenuItem,
   Checkbox,
   IconButton,
+  Snackbar,
+  Alert,
+  Select,
+  MenuItem as SelectMenuItem,
+  Chip,
 } from '@mui/material';
 import { menuItemClasses } from '@mui/material/MenuItem';
 
@@ -30,6 +35,11 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [isInEditMode, setIsInEditMode] = useState(false);
   const [editedRow, setEditedRow] = useState(row);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [action, setAction] = useState('');
+
+  const statusesOptions = ['Churned', 'Onboarding', 'Inquiry', 'Active'];
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -44,9 +54,11 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
       const docRef = doc(db, 'patientFormData', documentId);
       await deleteDoc(docRef);
       setOpenPopover(null);
-      console.log(`Document with ID: ${documentId} has been successfully deleted.`);
+      setAction('deleted');
+      setShowSuccessToast(true);
     } catch (error) {
-      console.error('Error deleting document: ', error);
+      setAction('deleted');
+      setShowErrorToast(true);
     }
   };
 
@@ -59,10 +71,12 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
     try {
       const docRef = doc(db, 'patientFormData', row.id);
       await updateDoc(docRef, { ...editedRow, id: docRef.id });
+      setAction('updated');
       setIsInEditMode(false);
-      console.log('Patient record updated successfully');
+      setShowSuccessToast(true);
     } catch (error) {
-      console.error('Error updating record: ', error);
+      setAction('updated');
+      setShowErrorToast(true);
     }
   };
 
@@ -105,12 +119,32 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         {/* Editable Address */}
         <TableCell>
           {isInEditMode ? (
-            <TextField
-              fullWidth
-              value={editedRow.address.street}
-              onChange={(e) => handleChange('address.street', e.target.value)}
-              size="small"
-            />
+            <>
+              <TextField
+                fullWidth
+                value={editedRow.address.street}
+                onChange={(e) => handleChange('address.street', e.target.value)}
+                size="small"
+              />
+              <TextField
+                fullWidth
+                value={editedRow.address.state}
+                onChange={(e) => handleChange('address.state', e.target.value)}
+                size="small"
+              />
+              <TextField
+                fullWidth
+                value={editedRow.address.zipcode}
+                onChange={(e) => handleChange('address.zipcode', e.target.value)}
+                size="small"
+              />
+              <TextField
+                fullWidth
+                value={editedRow.address.country}
+                onChange={(e) => handleChange('address.country', e.target.value)}
+                size="small"
+              />
+            </>
           ) : (
             `${row.address.street}, ${row.address.state} ${row.address.zipcode} ${row.address.country}`
           )}
@@ -130,28 +164,56 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           )}
         </TableCell>
 
-        {/* Status remains static */}
+        {/* Editable status field */}
         <TableCell>
-          <Label
-            color={
-              row.statuses.includes('Churned')
-                ? 'error'
-                : row.statuses.includes('Onboarding')
-                  ? 'warning'
-                  : row.statuses.includes('Inquiry')
-                    ? 'info'
-                    : 'success'
-            }
-          >
-            {row.statuses.map((status) => status)}
-          </Label>
+          {isInEditMode ? (
+            <Select
+              multiple
+              value={editedRow.statuses}
+              onChange={(e) => handleChange('statuses', e.target.value)}
+              renderValue={(selectedStatus) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selectedStatus.map((value: string) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              size="small"
+              fullWidth
+            >
+              {statusesOptions.map((status) => (
+                <SelectMenuItem key={status} value={status}>
+                  {status}
+                </SelectMenuItem>
+              ))}
+            </Select>
+          ) : (
+            <Label
+              color={
+                row.statuses.includes('Churned')
+                  ? 'error'
+                  : row.statuses.includes('Onboarding')
+                    ? 'warning'
+                    : row.statuses.includes('Inquiry')
+                      ? 'info'
+                      : 'success'
+              }
+            >
+              {row.statuses.map((status) => status).join(', ')}
+            </Label>
+          )}
         </TableCell>
 
         {/* Action buttons */}
         <TableCell align="right">
           {isInEditMode ? (
-            <div className='edit-button-container'>
-              <Button variant="contained" color="error" onClick={() => setIsInEditMode(false)} style={{ marginRight: '10px'}}>
+            <div className="edit-button-container">
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => setIsInEditMode(false)}
+                style={{ marginRight: '10px' }}
+              >
                 X
               </Button>
               <Button variant="contained" color="primary" onClick={handleSaveRow}>
@@ -205,6 +267,40 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           </MenuItem>
         </MenuList>
       </Popover>
+      {showSuccessToast && (
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          autoHideDuration={5000}
+          open={showSuccessToast}
+          onClose={() => setShowSuccessToast(false)}
+        >
+          <Alert
+            onClose={() => setShowSuccessToast(false)}
+            severity="success"
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            {`Patient record was successfully ${action}!`}
+          </Alert>
+        </Snackbar>
+      )}
+      {showErrorToast && (
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          autoHideDuration={5000}
+          open={showErrorToast}
+          onClose={() => setShowErrorToast(false)}
+        >
+          <Alert
+            onClose={() => setShowErrorToast(false)}
+            severity="error"
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            {`Patient record was not successfully ${action}. Please try again!`}
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 }
