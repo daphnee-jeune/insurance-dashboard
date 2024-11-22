@@ -164,14 +164,11 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         <TableCell>
           {isInEditMode ? (
             <Select
-              multiple
               value={editedRow.statuses}
-              onChange={(e) => handleChange('statuses', e.target.value)}
+              onChange={(e) => handleChange('statuses', [e.target.value])}
               renderValue={(selectedStatus) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selectedStatus.map((value: string) => (
-                    <Chip key={value} label={value} />
-                  ))}
+                  <Chip label={selectedStatus} />
                 </Box>
               )}
               size="small"
@@ -195,7 +192,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
                       : 'success'
               }
             >
-              {row.statuses.map((status) => status).join(', ')}
+              {row.statuses[0] || ''}
             </Label>
           )}
         </TableCell>
