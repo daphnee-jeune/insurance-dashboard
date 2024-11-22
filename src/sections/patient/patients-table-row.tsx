@@ -90,10 +90,6 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
-        </TableCell>
-
         {/* Editable fields for Name */}
         <TableCell component="th" scope="row">
           <Box gap={2} display="flex" alignItems="center">
