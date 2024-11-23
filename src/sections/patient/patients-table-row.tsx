@@ -9,8 +9,6 @@ import {
   MenuList,
   MenuItem,
   IconButton,
-  Snackbar,
-  Alert,
   Select,
   MenuItem as SelectMenuItem,
   Chip,
@@ -24,6 +22,7 @@ import { PatientDetails } from './view/useFetchPatients';
 
 import Toast from '../../layouts/components/Toast';
 import { db } from '../../firebase';
+import PatientsPopoverMenu from './patients-popover-menu';
 
 type PatientTableRowProps = {
   row: PatientDetails;
@@ -107,7 +106,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
       },
     }));
   };
-  console.log({ action })
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -222,44 +221,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
       </TableRow>
 
       {/* Popover Menu */}
-      <Popover
-        open={!!openPopover}
-        anchorEl={openPopover}
-        onClose={handleClosePopover}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <MenuList
-          disablePadding
-          sx={{
-            p: 0.5,
-            gap: 0.5,
-            width: 140,
-            display: 'flex',
-            flexDirection: 'column',
-            [`& .${menuItemClasses.root}`]: {
-              px: 1,
-              gap: 2,
-              borderRadius: 0.75,
-              [`&.${menuItemClasses.selected}`]: { bgcolor: 'action.selected' },
-            },
-          }}
-        >
-          <MenuItem onClick={handleClosePopover}>
-            <Iconify icon="ic:baseline-add" />
-            More details
-          </MenuItem>
-          <MenuItem onClick={handleEditRow}>
-            <Iconify icon="solar:pen-bold" />
-            Edit
-          </MenuItem>
-
-          <MenuItem onClick={() => handleDeletePatientRecord(row.id)} sx={{ color: 'error.main' }}>
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
-          </MenuItem>
-        </MenuList>
-      </Popover>
+      <PatientsPopoverMenu openPopover={openPopover} handleClosePopover={handleClosePopover} handleEditRow={handleEditRow} handleDeletePatientRecord={() => handleDeletePatientRecord(row.id)} rowId={row.id} />
       {showSuccessToast && (
         <Toast
           open={showSuccessToast}
