@@ -154,7 +154,11 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
               size="small"
             />
           ) : (
-            row.dateOfBirth
+            new Date(row.dateOfBirth).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: '2-digit',
+            })
           )}
         </TableCell>
         {/* Editable status field */}
