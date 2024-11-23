@@ -8,7 +8,6 @@ import {
   Box,
   MenuList,
   MenuItem,
-  Checkbox,
   IconButton,
   Snackbar,
   Alert,
