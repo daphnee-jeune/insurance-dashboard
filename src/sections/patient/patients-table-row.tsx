@@ -87,6 +87,26 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
     }));
   };
 
+  const getEditableAddressFieldValue = (address: {
+    street: string;
+    state: string;
+    zipcode: string;
+    country: string;
+  }) => `${address.street} ${address.state} ${address.zipcode} ${address.country}`;
+  const handleAddressChange = (value: string) => {
+    const parts = value.split(' '); // Split the input into parts
+    setEditedRow((prev) => ({
+      ...prev,
+      address: {
+        street: parts.slice(0, -3).join(' ') || '', // Assume street is everything before state
+        address2: '',
+        state: parts[parts.length - 3] || '', // Third to last part
+        zipcode: parts[parts.length - 2] || '', // Second to last part
+        country: parts[parts.length - 1] || '', // Last part
+      },
+    }));
+  };
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -118,26 +138,8 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
             <>
               <TextField
                 fullWidth
-                value={editedRow.address.street}
-                onChange={(e) => handleChange('address.street', e.target.value)}
-                size="small"
-              />
-              <TextField
-                fullWidth
-                value={editedRow.address.state}
-                onChange={(e) => handleChange('address.state', e.target.value)}
-                size="small"
-              />
-              <TextField
-                fullWidth
-                value={editedRow.address.zipcode}
-                onChange={(e) => handleChange('address.zipcode', e.target.value)}
-                size="small"
-              />
-              <TextField
-                fullWidth
-                value={editedRow.address.country}
-                onChange={(e) => handleChange('address.country', e.target.value)}
+                value={getEditableAddressFieldValue(editedRow.address)}
+                onChange={(e) => handleAddressChange(e.target.value)}
                 size="small"
               />
             </>
