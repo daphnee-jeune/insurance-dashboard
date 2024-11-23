@@ -31,6 +31,7 @@ const usePatients = () => {
           dateOfBirth: data.dateOfBirth ?? '',
           address: {
             street: data.address?.street ?? '',
+            city: data.address?.city ?? '',
             address2: data.address?.address2 ?? '',
             state: data.address?.state ?? '',
             zipcode: data.address?.zipcode ?? '',
@@ -54,7 +55,6 @@ const usePatients = () => {
       setLoading(false);
     }
   }, []);
-
 
   useEffect(() => {
     fetchPatients();

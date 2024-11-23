@@ -18,6 +18,7 @@ type Address = {
   street: string;
   address2: string;
   state: string;
+  city: string;
   zipcode: string;
   country: string;
 };
@@ -61,6 +62,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
     address: {
       street: '',
       address2: '',
+      city: '',
       state: '',
       zipcode: '',
       country: '',
@@ -126,6 +128,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
         address: {
           street: '',
           address2: '',
+          city: '',
           state: '',
           zipcode: '',
           country: '',
@@ -221,6 +224,16 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
               <Grid item xs={6}>
                 <TextField
                   fullWidth
+                  label="City"
+                  name="city"
+                  value={formData.address.city}
+                  onChange={handleAddressChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
                   label="State"
                   name="state"
                   value={formData.address.state}
@@ -238,7 +251,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
                   required
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   fullWidth
                   label="Country"
