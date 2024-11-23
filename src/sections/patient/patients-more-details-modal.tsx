@@ -17,6 +17,7 @@ type MoreDetailsModalProps = {
 }
 const MoreDetailsModal = ({ open, setOpen }: MoreDetailsModalProps) => {
   const handleClose = () => setOpen(false);
+
   return (
     <Modal
       open={open}

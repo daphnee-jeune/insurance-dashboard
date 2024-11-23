@@ -19,7 +19,7 @@ const PatientsPopoverMenu = ({
   rowId,
 }: PatientPopoverMenuProps) => {
   const [showMoreDetails, setShowMoreDetails] = useState(false);
-  console.log({ showMoreDetails })
+
   return (
     <Popover
       open={!!openPopover}
