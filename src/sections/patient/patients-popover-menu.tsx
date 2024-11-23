@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Popover, MenuList, MenuItem, menuItemClasses } from '@mui/material';
 import { Iconify } from 'src/components/iconify';
 import MoreDetailsModal from './patients-more-details-modal';
+import { PatientDetails } from './view/useFetchPatients';
 
 type PatientPopoverMenuProps = {
   openPopover: HTMLButtonElement | null;
   handleClosePopover: () => void;
   handleEditRow: (row: any) => void;
   handleDeletePatientRecord: (id: string) => void;
-  rowId: string;
+  row: PatientDetails;
 };
 
 const PatientsPopoverMenu = ({
@@ -16,7 +17,7 @@ const PatientsPopoverMenu = ({
   handleClosePopover,
   handleEditRow,
   handleDeletePatientRecord,
-  rowId,
+  row,
 }: PatientPopoverMenuProps) => {
   const [showMoreDetails, setShowMoreDetails] = useState(false);
 
@@ -52,12 +53,12 @@ const PatientsPopoverMenu = ({
           <Iconify icon="solar:pen-bold" />
           Edit
         </MenuItem>
-        <MenuItem onClick={() => handleDeletePatientRecord(rowId)} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={() => handleDeletePatientRecord(row.id)} sx={{ color: 'error.main' }}>
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
         </MenuItem>
       </MenuList>
-      {showMoreDetails && <MoreDetailsModal open={showMoreDetails} setOpen={setShowMoreDetails}/>}
+      {showMoreDetails && <MoreDetailsModal open={showMoreDetails} setOpen={setShowMoreDetails} row={row}/>}
     </Popover>
   );
 };

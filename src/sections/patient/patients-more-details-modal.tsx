@@ -1,4 +1,5 @@
-import { Modal, Box, Typography } from '@mui/material';
+import { Modal, Box, Typography, Grid } from '@mui/material';
+import { PatientDetails } from './view/useFetchPatients';
 
 const style = {
   m: 4,
@@ -14,10 +15,17 @@ const style = {
 type MoreDetailsModalProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
-}
-const MoreDetailsModal = ({ open, setOpen }: MoreDetailsModalProps) => {
+  row: PatientDetails;
+};
+const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const handleClose = () => setOpen(false);
-
+  const {
+    firstName,
+    middleName,
+    lastName,
+    address: { street, address2, city, state, zipcode, country },
+    extraFields: [{ label, value }],
+  } = row;
   return (
     <Modal
       open={open}
@@ -27,10 +35,13 @@ const MoreDetailsModal = ({ open, setOpen }: MoreDetailsModalProps) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Text in a modal
+          Name: {firstName} {middleName} {lastName}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          Address: {street} {address2} {city} {state} {zipcode} {country}
+        </Typography>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          {label}: {value}
         </Typography>
       </Box>
     </Modal>

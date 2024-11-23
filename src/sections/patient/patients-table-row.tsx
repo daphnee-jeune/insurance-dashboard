@@ -232,7 +232,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         handleClosePopover={handleClosePopover}
         handleEditRow={handleEditRow}
         handleDeletePatientRecord={() => handleDeletePatientRecord(row.id)}
-        rowId={row.id}
+        row={row}
       />
       {showSuccessToast && (
         <Toast
