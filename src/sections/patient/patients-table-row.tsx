@@ -22,6 +22,7 @@ import { Iconify } from 'src/components/iconify';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from './view/useFetchPatients';
 
+import Toast from '../../layouts/components/Toast';
 import { db } from '../../firebase';
 
 type PatientTableRowProps = {
@@ -92,20 +93,21 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
     zipcode: string;
     country: string;
   }) => `${address.street} ${address.state} ${address.zipcode} ${address.country}`;
+
   const handleAddressChange = (value: string) => {
-    const parts = value.split(' '); // Split the input into parts
+    const parts = value.split(' '); // split the input into parts
     setEditedRow((prev) => ({
       ...prev,
       address: {
-        street: parts.slice(0, -3).join(' ') || '', // Assume street is everything before state
+        street: parts.slice(0, -3).join(' ') || '',
         address2: '',
-        state: parts[parts.length - 3] || '', // Third to last part
-        zipcode: parts[parts.length - 2] || '', // Second to last part
-        country: parts[parts.length - 1] || '', // Last part
+        state: parts[parts.length - 3] || '',
+        zipcode: parts[parts.length - 2] || '',
+        country: parts[parts.length - 1] || '',
       },
     }));
   };
-
+  console.log({ action })
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -130,7 +132,6 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
             )}
           </Box>
         </TableCell>
-
         {/* Editable Address */}
         <TableCell>
           {isInEditMode ? (
@@ -146,7 +147,6 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
             `${row.address.street}, ${row.address.state} ${row.address.zipcode} ${row.address.country}`
           )}
         </TableCell>
-
         {/* Editable DOB */}
         <TableCell>
           {isInEditMode ? (
@@ -160,7 +160,6 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
             row.dateOfBirth
           )}
         </TableCell>
-
         {/* Editable status field */}
         <TableCell>
           {isInEditMode ? (
@@ -262,38 +261,20 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         </MenuList>
       </Popover>
       {showSuccessToast && (
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          autoHideDuration={5000}
+        <Toast
           open={showSuccessToast}
-          onClose={() => setShowSuccessToast(false)}
-        >
-          <Alert
-            onClose={() => setShowSuccessToast(false)}
-            severity="success"
-            variant="filled"
-            sx={{ width: '100%' }}
-          >
-            {`Patient record was successfully ${action}!`}
-          </Alert>
-        </Snackbar>
+          handleClose={() => setShowSuccessToast(false)}
+          copy={`Patient record was successfully ${action}!`}
+          action={action}
+        />
       )}
       {showErrorToast && (
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          autoHideDuration={5000}
+        <Toast
           open={showErrorToast}
-          onClose={() => setShowErrorToast(false)}
-        >
-          <Alert
-            onClose={() => setShowErrorToast(false)}
-            severity="error"
-            variant="filled"
-            sx={{ width: '100%' }}
-          >
-            {`Patient record was not successfully ${action}. Please try again!`}
-          </Alert>
-        </Snackbar>
+          handleClose={() => setShowErrorToast(false)}
+          copy={`Patient record was not successfully ${action}. Please try again!`}
+          action={action}
+        />
       )}
     </>
   );
