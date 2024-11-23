@@ -5,7 +5,6 @@ import { _tasks, _posts, _timeline } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { PatientsView } from 'src/sections/patient/view';
 
-import { AnalyticsTasks } from '../analytics-tasks';
 import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
 
 export function OverviewAnalyticsView() {
@@ -71,9 +70,6 @@ export function OverviewAnalyticsView() {
           />
         </Grid>
         <PatientsView />
-        <Grid xs={12} md={6} lg={12}>
-          <AnalyticsTasks title="Tasks" list={_tasks} />
-        </Grid>
       </Grid>
     </DashboardContent>
   );
