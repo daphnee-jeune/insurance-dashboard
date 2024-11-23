@@ -118,13 +118,18 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
                   size="small"
                 />
                 <TextField
+                  value={editedRow.middleName}
+                  onChange={(e) => handleChange('middleName', e.target.value)}
+                  size="small"
+                />
+                <TextField
                   value={editedRow.lastName}
                   onChange={(e) => handleChange('lastName', e.target.value)}
                   size="small"
                 />
               </>
             ) : (
-              `${row.firstName} ${row.lastName}`
+              `${row.firstName} ${row.middleName} ${row.lastName}`
             )}
           </Box>
         </TableCell>

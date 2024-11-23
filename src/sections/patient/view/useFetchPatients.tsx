@@ -26,6 +26,7 @@ const usePatients = () => {
         return {
           id: doc.id,
           firstName: data.firstName ?? '',
+          middleName: data.middleName ?? '',
           lastName: data.lastName ?? '',
           dateOfBirth: data.dateOfBirth ?? '',
           address: {
