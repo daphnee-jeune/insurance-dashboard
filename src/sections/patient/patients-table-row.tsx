@@ -6,19 +6,20 @@ import {
   TableRow,
   TableCell,
   Box,
-  MenuList,
-  MenuItem,
-  Checkbox,
   IconButton,
+  Select,
+  MenuItem as SelectMenuItem,
+  Chip,
 } from '@mui/material';
-import { menuItemClasses } from '@mui/material/MenuItem';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from './view/useFetchPatients';
 
+import Toast from '../../layouts/components/Toast';
 import { db } from '../../firebase';
+import PatientsPopoverMenu from './patients-popover-menu';
 
 type PatientTableRowProps = {
   row: PatientDetails;
@@ -30,6 +31,11 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [isInEditMode, setIsInEditMode] = useState(false);
   const [editedRow, setEditedRow] = useState(row);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [action, setAction] = useState('');
+
+  const statusesOptions = ['Churned', 'Onboarding', 'Inquiry', 'Active'];
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -44,9 +50,11 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
       const docRef = doc(db, 'patientFormData', documentId);
       await deleteDoc(docRef);
       setOpenPopover(null);
-      console.log(`Document with ID: ${documentId} has been successfully deleted.`);
+      setAction('deleted');
+      setShowSuccessToast(true);
     } catch (error) {
-      console.error('Error deleting document: ', error);
+      setAction('deleted');
+      setShowErrorToast(true);
     }
   };
 
@@ -59,10 +67,12 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
     try {
       const docRef = doc(db, 'patientFormData', row.id);
       await updateDoc(docRef, { ...editedRow, id: docRef.id });
+      setAction('updated');
       setIsInEditMode(false);
-      console.log('Patient record updated successfully');
+      setShowSuccessToast(true);
     } catch (error) {
-      console.error('Error updating record: ', error);
+      setAction('updated');
+      setShowErrorToast(true);
     }
   };
 
@@ -73,13 +83,30 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
     }));
   };
 
+  const getEditableAddressFieldValue = (address: {
+    street: string;
+    state: string;
+    zipcode: string;
+    country: string;
+  }) => `${address.street} ${address.state} ${address.zipcode} ${address.country}`;
+
+  const handleAddressChange = (value: string) => {
+    const parts = value.split(' '); // split the input into parts
+    setEditedRow((prev) => ({
+      ...prev,
+      address: {
+        street: parts.slice(0, -3).join(' ') || '',
+        address2: '',
+        state: parts[parts.length - 3] || '',
+        zipcode: parts[parts.length - 2] || '',
+        country: parts[parts.length - 1] || '',
+      },
+    }));
+  };
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
-        </TableCell>
-
         {/* Editable fields for Name */}
         <TableCell component="th" scope="row">
           <Box gap={2} display="flex" alignItems="center">
@@ -101,21 +128,21 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
             )}
           </Box>
         </TableCell>
-
         {/* Editable Address */}
         <TableCell>
           {isInEditMode ? (
-            <TextField
-              fullWidth
-              value={editedRow.address.street}
-              onChange={(e) => handleChange('address.street', e.target.value)}
-              size="small"
-            />
+            <>
+              <TextField
+                fullWidth
+                value={getEditableAddressFieldValue(editedRow.address)}
+                onChange={(e) => handleAddressChange(e.target.value)}
+                size="small"
+              />
+            </>
           ) : (
             `${row.address.street}, ${row.address.state} ${row.address.zipcode} ${row.address.country}`
           )}
         </TableCell>
-
         {/* Editable DOB */}
         <TableCell>
           {isInEditMode ? (
@@ -126,32 +153,59 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
               size="small"
             />
           ) : (
-            row.dateOfBirth
+            new Date(row.dateOfBirth).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: '2-digit',
+            })
           )}
         </TableCell>
-
-        {/* Status remains static */}
+        {/* Editable status field */}
         <TableCell>
-          <Label
-            color={
-              row.statuses.includes('Churned')
-                ? 'error'
-                : row.statuses.includes('Onboarding')
-                  ? 'warning'
-                  : row.statuses.includes('Inquiry')
-                    ? 'info'
-                    : 'success'
-            }
-          >
-            {row.statuses.map((status) => status)}
-          </Label>
+          {isInEditMode ? (
+            <Select
+              value={editedRow.statuses} // Use the first value of `statuses` if it's an array
+              onChange={(e) => handleChange('statuses', [e.target.value])}
+              renderValue={(selectedStatus) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  <Chip label={selectedStatus} />
+                </Box>
+              )}
+              size="small"
+              fullWidth
+            >
+              {statusesOptions.map((status) => (
+                <SelectMenuItem key={status} value={status}>
+                  {status}
+                </SelectMenuItem>
+              ))}
+            </Select>
+          ) : (
+            <Label
+              color={
+                row.statuses.includes('Churned')
+                  ? 'error'
+                  : row.statuses.includes('Onboarding')
+                    ? 'warning'
+                    : row.statuses.includes('Inquiry')
+                      ? 'info'
+                      : 'success'
+              }
+            >
+              {row.statuses[0] || ''}
+            </Label>
+          )}
         </TableCell>
-
         {/* Action buttons */}
         <TableCell align="right">
           {isInEditMode ? (
-            <div className='edit-button-container'>
-              <Button variant="contained" color="error" onClick={() => setIsInEditMode(false)} style={{ marginRight: '10px'}}>
+            <div className="edit-button-container">
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => setIsInEditMode(false)}
+                style={{ marginRight: '10px' }}
+              >
                 X
               </Button>
               <Button variant="contained" color="primary" onClick={handleSaveRow}>
@@ -165,46 +219,31 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           )}
         </TableCell>
       </TableRow>
-
       {/* Popover Menu */}
-      <Popover
-        open={!!openPopover}
-        anchorEl={openPopover}
-        onClose={handleClosePopover}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <MenuList
-          disablePadding
-          sx={{
-            p: 0.5,
-            gap: 0.5,
-            width: 140,
-            display: 'flex',
-            flexDirection: 'column',
-            [`& .${menuItemClasses.root}`]: {
-              px: 1,
-              gap: 2,
-              borderRadius: 0.75,
-              [`&.${menuItemClasses.selected}`]: { bgcolor: 'action.selected' },
-            },
-          }}
-        >
-          <MenuItem onClick={handleClosePopover}>
-            <Iconify icon="ic:baseline-add" />
-            More details
-          </MenuItem>
-          <MenuItem onClick={handleEditRow}>
-            <Iconify icon="solar:pen-bold" />
-            Edit
-          </MenuItem>
-
-          <MenuItem onClick={() => handleDeletePatientRecord(row.id)} sx={{ color: 'error.main' }}>
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
-          </MenuItem>
-        </MenuList>
-      </Popover>
+      <PatientsPopoverMenu
+        openPopover={openPopover}
+        handleClosePopover={handleClosePopover}
+        handleEditRow={handleEditRow}
+        handleDeletePatientRecord={() => handleDeletePatientRecord(row.id)}
+        rowId={row.id}
+      />
+      {/* Success and error toasts */}
+      {showSuccessToast && (
+        <Toast
+          open={showSuccessToast}
+          handleClose={() => setShowSuccessToast(false)}
+          copy={`Patient record was successfully ${action}!`}
+          action={action}
+        />
+      )}
+      {showErrorToast && (
+        <Toast
+          open={showErrorToast}
+          handleClose={() => setShowErrorToast(false)}
+          copy={`Patient record was not successfully ${action}. Please try again!`}
+          action={action}
+        />
+      )}
     </>
   );
 }
