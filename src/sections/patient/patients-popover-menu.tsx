@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Popover, MenuList, MenuItem, menuItemClasses } from '@mui/material';
 import { Iconify } from 'src/components/iconify';
+import MoreDetailsModal from './patients-more-details-modal';
 
 type PatientPopoverMenuProps = {
   openPopover: HTMLButtonElement | null;
@@ -9,6 +10,7 @@ type PatientPopoverMenuProps = {
   handleDeletePatientRecord: (id: string) => void;
   rowId: string;
 };
+
 const PatientsPopoverMenu = ({
   openPopover,
   handleClosePopover,
@@ -17,6 +19,7 @@ const PatientsPopoverMenu = ({
   rowId,
 }: PatientPopoverMenuProps) => {
   const [showMoreDetails, setShowMoreDetails] = useState(false);
+  console.log({ showMoreDetails })
   return (
     <Popover
       open={!!openPopover}
@@ -54,7 +57,7 @@ const PatientsPopoverMenu = ({
           Delete
         </MenuItem>
       </MenuList>
-      {showMoreDetails && alert(`More details`)}
+      {showMoreDetails && <MoreDetailsModal open={showMoreDetails} setOpen={setShowMoreDetails}/>}
     </Popover>
   );
 };
