@@ -11,7 +11,6 @@ import {
   MenuItem as SelectMenuItem,
   Chip,
 } from '@mui/material';
-import { menuItemClasses } from '@mui/material/MenuItem';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -197,7 +196,6 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
             </Label>
           )}
         </TableCell>
-
         {/* Action buttons */}
         <TableCell align="right">
           {isInEditMode ? (
@@ -221,7 +219,6 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           )}
         </TableCell>
       </TableRow>
-
       {/* Popover Menu */}
       <PatientsPopoverMenu
         openPopover={openPopover}
@@ -230,6 +227,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         handleDeletePatientRecord={() => handleDeletePatientRecord(row.id)}
         rowId={row.id}
       />
+      {/* Success and error toasts */}
       {showSuccessToast && (
         <Toast
           open={showSuccessToast}
