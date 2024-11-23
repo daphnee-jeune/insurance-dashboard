@@ -8,8 +8,7 @@ type PatientPopoverMenuProps = {
   handleDeletePatientRecord: (id: string) => void;
   rowId: string;
 }
-const PatientsPopoverMenu = ({ openPopover, handleClosePopover, handleEditRow, handleDeletePatientRecord, rowId}: PatientPopoverMenuProps) => {
-  console.log(typeof rowId)
+const PatientsPopoverMenu = ({ openPopover, handleClosePopover, handleEditRow, handleDeletePatientRecord, rowId }: PatientPopoverMenuProps) => {
   return (
     <Popover
         open={!!openPopover}
@@ -42,7 +41,6 @@ const PatientsPopoverMenu = ({ openPopover, handleClosePopover, handleEditRow, h
             <Iconify icon="solar:pen-bold" />
             Edit
           </MenuItem>
-
           <MenuItem onClick={() => handleDeletePatientRecord(rowId)} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete

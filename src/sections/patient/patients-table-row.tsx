@@ -6,8 +6,6 @@ import {
   TableRow,
   TableCell,
   Box,
-  MenuList,
-  MenuItem,
   IconButton,
   Select,
   MenuItem as SelectMenuItem,
@@ -164,7 +162,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           {isInEditMode ? (
             <Select
               value={editedRow.statuses} // Use the first value of `statuses` if it's an array
-              onChange={(e) => handleChange('statuses', [e.target.value])} // Wrap the selected value in an array
+              onChange={(e) => handleChange('statuses', [e.target.value])}
               renderValue={(selectedStatus) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   <Chip label={selectedStatus} />
@@ -221,7 +219,13 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
       </TableRow>
 
       {/* Popover Menu */}
-      <PatientsPopoverMenu openPopover={openPopover} handleClosePopover={handleClosePopover} handleEditRow={handleEditRow} handleDeletePatientRecord={() => handleDeletePatientRecord(row.id)} rowId={row.id} />
+      <PatientsPopoverMenu
+        openPopover={openPopover}
+        handleClosePopover={handleClosePopover}
+        handleEditRow={handleEditRow}
+        handleDeletePatientRecord={() => handleDeletePatientRecord(row.id)}
+        rowId={row.id}
+      />
       {showSuccessToast && (
         <Toast
           open={showSuccessToast}
