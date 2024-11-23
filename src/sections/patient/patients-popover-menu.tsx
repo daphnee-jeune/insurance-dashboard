@@ -5,10 +5,11 @@ type PatientPopoverMenuProps = {
   openPopover: HTMLButtonElement | null;
   handleClosePopover: () => void;
   handleEditRow: (row: any) => void;
-  handleDeletePatientRecord: (id: number) => void;
+  handleDeletePatientRecord: (id: string) => void;
   rowId: string;
 }
 const PatientsPopoverMenu = ({ openPopover, handleClosePopover, handleEditRow, handleDeletePatientRecord, rowId}: PatientPopoverMenuProps) => {
+  console.log(typeof rowId)
   return (
     <Popover
         open={!!openPopover}
