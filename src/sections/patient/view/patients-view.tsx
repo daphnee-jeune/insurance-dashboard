@@ -25,8 +25,6 @@ import NewPatientForm from '../../../layouts/components/new-patient-form';
 
 import useFetchPatients from './useFetchPatients';
 
-
-
 export function PatientsView() {
   const table = useTable();
   const { patientDetails, loading, error } = useFetchPatients();
@@ -35,9 +33,12 @@ export function PatientsView() {
   const [open, setOpen] = useState(false);
 
   // Filter patients based on the filterName state
-  const filteredPatients = patientDetails?.filter((patient) =>
-    `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(filterName.toLowerCase())
-  );
+  const filteredPatients = patientDetails?.filter((patient) => {
+    const { firstName, middleName, lastName } = patient;
+    return `${firstName} ${middleName} ${lastName}`
+      .toLowerCase()
+      .includes(filterName.toLowerCase());
+  });
 
   const notFound = !filteredPatients?.length && !!filterName;
 
@@ -81,7 +82,8 @@ export function PatientsView() {
                 onSelectAllRows={(checked) =>
                   table.onSelectAllRows(
                     checked,
-                    patientDetails?.map((patient) => `${patient.firstName} ${patient.lastName}`) || []
+                    patientDetails?.map((patient) => `${patient.firstName} ${patient.lastName}`) ||
+                      []
                   )
                 }
                 headLabel={[
@@ -102,12 +104,8 @@ export function PatientsView() {
                     <PatientsTableRow
                       key={row.firstName + row.lastName}
                       row={row}
-                      selected={table.selected.includes(
-                        `${row.firstName} ${row.lastName}`
-                      )}
-                      onSelectRow={() =>
-                        table.onSelectRow(`${row.firstName} ${row.lastName}`)
-                      }
+                      selected={table.selected.includes(`${row.firstName} ${row.lastName}`)}
+                      onSelectRow={() => table.onSelectRow(`${row.firstName} ${row.lastName}`)}
                     />
                   ))}
 

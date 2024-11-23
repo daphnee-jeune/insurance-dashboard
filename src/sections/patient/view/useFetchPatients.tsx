@@ -26,10 +26,12 @@ const usePatients = () => {
         return {
           id: doc.id,
           firstName: data.firstName ?? '',
+          middleName: data.middleName ?? '',
           lastName: data.lastName ?? '',
           dateOfBirth: data.dateOfBirth ?? '',
           address: {
             street: data.address?.street ?? '',
+            city: data.address?.city ?? '',
             address2: data.address?.address2 ?? '',
             state: data.address?.state ?? '',
             zipcode: data.address?.zipcode ?? '',
@@ -53,7 +55,6 @@ const usePatients = () => {
       setLoading(false);
     }
   }, []);
-
 
   useEffect(() => {
     fetchPatients();

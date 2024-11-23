@@ -18,6 +18,7 @@ type Address = {
   street: string;
   address2: string;
   state: string;
+  city: string;
   zipcode: string;
   country: string;
 };
@@ -29,6 +30,7 @@ type ExtraField = {
 
 export type FormData = {
   firstName: string;
+  middleName: string;
   lastName: string;
   dateOfBirth: string;
   address: Address;
@@ -54,11 +56,13 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
   const statusOptions = ['Inquiry', 'Onboarding', 'Active', 'Churned'];
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
+    middleName: '',
     lastName: '',
     dateOfBirth: '',
     address: {
       street: '',
       address2: '',
+      city: '',
       state: '',
       zipcode: '',
       country: '',
@@ -118,11 +122,13 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
       // Reset form data
       setFormData({
         firstName: '',
+        middleName: '',
         lastName: '',
         dateOfBirth: '',
         address: {
           street: '',
           address2: '',
+          city: '',
           state: '',
           zipcode: '',
           country: '',
@@ -150,7 +156,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   label="First Name"
@@ -160,7 +166,16 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
                   required
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Middle Name"
+                  name="middleName"
+                  value={formData.middleName}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   label="Last Name"
@@ -209,6 +224,16 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
               <Grid item xs={6}>
                 <TextField
                   fullWidth
+                  label="City"
+                  name="city"
+                  value={formData.address.city}
+                  onChange={handleAddressChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
                   label="State"
                   name="state"
                   value={formData.address.state}
@@ -226,7 +251,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
                   required
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   fullWidth
                   label="Country"

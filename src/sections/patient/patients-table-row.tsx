@@ -97,6 +97,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
       address: {
         street: parts.slice(0, -3).join(' ') || '',
         address2: '',
+        city: parts[parts.length - 4] || '',
         state: parts[parts.length - 3] || '',
         zipcode: parts[parts.length - 2] || '',
         country: parts[parts.length - 1] || '',
@@ -118,13 +119,18 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
                   size="small"
                 />
                 <TextField
+                  value={editedRow.middleName}
+                  onChange={(e) => handleChange('middleName', e.target.value)}
+                  size="small"
+                />
+                <TextField
                   value={editedRow.lastName}
                   onChange={(e) => handleChange('lastName', e.target.value)}
                   size="small"
                 />
               </>
             ) : (
-              `${row.firstName} ${row.lastName}`
+              `${row.firstName} ${row.middleName} ${row.lastName}`
             )}
           </Box>
         </TableCell>
@@ -140,7 +146,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
               />
             </>
           ) : (
-            `${row.address.street}, ${row.address.state} ${row.address.zipcode} ${row.address.country}`
+            `${row.address.street}, ${row.address.city} ${row.address.state} ${row.address.zipcode} ${row.address.country}`
           )}
         </TableCell>
         {/* Editable DOB */}
