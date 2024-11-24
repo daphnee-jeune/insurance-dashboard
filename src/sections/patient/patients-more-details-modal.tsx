@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Box, Typography, Button, TextField } from '@mui/material';
+import { Modal, Box, Typography, Button, TextField, IconButton } from '@mui/material';
 import { doc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from './view/useFetchPatients';
 import { db } from '../../firebase';
@@ -51,12 +51,10 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   };
 
   const handleFieldChange = (field: string, value: string, index?: number) => {
-    if (field === 'extraFields') {
+    if (field === 'extraFields' && index !== undefined) {
       setEditedRow((prev) => {
-        const updatedExtraFields = [...prev.extraFields];
-        if (index !== undefined) {
-          updatedExtraFields[index] = { ...updatedExtraFields[index], value };
-        }
+        const updatedExtraFields = [...(prev.extraFields || [])];
+        updatedExtraFields[index] = value; // Update the specific field
         return { ...prev, extraFields: updatedExtraFields };
       });
     } else if (field.includes('.')) {
@@ -157,15 +155,33 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
             margin="dense"
           />
           {editedRow.extraFields?.map((field, index) => (
-            <TextField
+            <Box
               key={index}
-              label={field.label}
-              value={field.value}
-              onChange={(e) => handleFieldChange('extraFields', e.target.value, index)}
-              fullWidth
-              margin="dense"
-            />
+              sx={{ display: 'flex', gap: 2, alignItems: 'center', marginBottom: 1 }}
+            >
+              <TextField
+                label="Field Label"
+                value={field.label}
+                onChange={(e) =>
+                  handleFieldChange('extraFields', { ...field, label: e.target.value }, index)
+                }
+                fullWidth
+                margin="dense"
+              />
+              <TextField
+                label="Field Value"
+                value={field.value}
+                onChange={(e) =>
+                  handleFieldChange('extraFields', { ...field, value: e.target.value }, index)
+                }
+                fullWidth
+                margin="dense"
+              />
+            </Box>
           ))}
+          <IconButton color="primary" onClick={addExtraField}>
+            Add custom fields
+          </IconButton>
         </>
       );
     }
@@ -187,6 +203,13 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
         ))}
       </>
     );
+  };
+
+  const addExtraField = () => {
+    setEditedRow((prev) => ({
+      ...prev,
+      extraFields: [...(prev.extraFields || []), { label: '', value: '' }],
+    }));
   };
 
   return (
