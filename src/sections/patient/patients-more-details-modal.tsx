@@ -38,7 +38,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
       return (
         <>
           <Button onClick={() => setIsOnEditMode(false)}>Cancel</Button>
-          <Button onClick={() => handleClose()}>Save</Button>
+          <Button onClick={updatePatientDetails}>Save</Button>
         </>
       );
     }
@@ -72,6 +72,11 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     }
   };
 
+  const updatePatientDetails = () => {
+    console.log("Updated info:", editedRow);
+    setIsOnEditMode(false);
+    handleClose();
+  }
   const renderModalContent = () => {
     if (isOnEditMode) {
       return (
