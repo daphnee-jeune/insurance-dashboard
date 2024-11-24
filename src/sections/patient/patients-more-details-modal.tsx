@@ -45,15 +45,15 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     if (isOnEditMode) {
       return (
         <>
-          <TextField label="First Name" value={row.firstName} fullWidth margin="dense" />
-          <TextField label="Middle Name" value={row.middleName} fullWidth margin="dense" />
-          <TextField label="Last Name" value={row.lastName} fullWidth margin="dense" />
-          <TextField label="Street" value={row.address.street} fullWidth margin="dense" />
-          <TextField label="Address Line 2" value={row.address.address2} fullWidth margin="dense" />
-          <TextField label="City" value={row.address.city} fullWidth margin="dense" />
-          <TextField label="State" value={row.address.state} fullWidth margin="dense" />
-          <TextField label="Zipcode" value={row.address.zipcode} fullWidth margin="dense" />
-          <TextField label="Country" value={row.address.country} fullWidth margin="dense" />
+          <TextField label="First Name" value={firstName} fullWidth margin="dense" />
+          <TextField label="Middle Name" value={middleName} fullWidth margin="dense" />
+          <TextField label="Last Name" value={lastName} fullWidth margin="dense" />
+          <TextField label="Street" value={street} fullWidth margin="dense" />
+          <TextField label="Address Line 2" value={address2} fullWidth margin="dense" />
+          <TextField label="City" value={city} fullWidth margin="dense" />
+          <TextField label="State" value={state} fullWidth margin="dense" />
+          <TextField label="Zipcode" value={zipcode} fullWidth margin="dense" />
+          <TextField label="Country" value={country} fullWidth margin="dense" />
           {extraFields?.map((field) => (
             <TextField label={field.label} value={field.value} fullWidth margin="dense" />
           ))}
