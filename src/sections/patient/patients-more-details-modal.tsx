@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Modal, Box, Typography, Button, TextField } from '@mui/material';
-import { PatientDetails } from './view/useFetchPatients';
 import { doc, updateDoc } from 'firebase/firestore';
+import { PatientDetails } from './view/useFetchPatients';
 import { db } from '../../firebase';
+
+import Toast from '../../layouts/components/Toast';
 
 const style = {
   m: 4,
@@ -24,6 +26,8 @@ type MoreDetailsModalProps = {
 const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [isOnEditMode, setIsOnEditMode] = useState(false);
   const [editedRow, setEditedRow] = useState<PatientDetails>(row);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
 
   const handleClose = () => setOpen(false);
   const {
@@ -33,7 +37,6 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     address: { street, address2, city, state, zipcode, country },
     extraFields,
   } = row;
-
 
   const displayButtons = () => {
     if (isOnEditMode) {
@@ -79,12 +82,13 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
       const docRef = doc(db, 'patientFormData', row.id);
       await updateDoc(docRef, { ...editedRow, id: docRef.id });
       setIsOnEditMode(false);
+      setShowSuccessToast(true);
       handleClose();
-      console.log('SUCCESS')
     } catch (err) {
-      console.error("OOPS", err);
+      setShowErrorToast(true);
+      console.error('error updating patient record: ', err);
     }
-  }
+  };
   const renderModalContent = () => {
     if (isOnEditMode) {
       return (
@@ -186,17 +190,33 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
-        {renderModalContent()}
-        {displayButtons()}
-      </Box>
-    </Modal>
+    <>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          {renderModalContent()}
+          {displayButtons()}
+        </Box>
+      </Modal>
+      {showSuccessToast && (
+        <Toast
+          open={showSuccessToast}
+          handleClose={() => setShowSuccessToast(false)}
+          copy="Patient record was successfully updated!"
+        />
+      )}
+      {showErrorToast && (
+        <Toast
+          open={showErrorToast}
+          handleClose={() => setShowErrorToast(false)}
+          copy="Patient record was not successfully updated. Please try again!"
+        />
+      )}
+    </>
   );
 };
 
