@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Box, Typography, Button } from '@mui/material';
+import { Modal, Box, Typography, Button, TextField } from '@mui/material';
 import { PatientDetails } from './view/useFetchPatients';
 
 const style = {
@@ -41,14 +41,27 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     }
     return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
   };
-  return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
+  const renderModalContent = () => {
+    if (isOnEditMode) {
+      return (
+        <>
+          <TextField label="First Name" value={row.firstName} fullWidth margin="dense" />
+          <TextField label="Middle Name" value={row.middleName} fullWidth margin="dense" />
+          <TextField label="Last Name" value={row.lastName} fullWidth margin="dense" />
+          <TextField label="Street" value={row.address.street} fullWidth margin="dense" />
+          <TextField label="Address Line 2" value={row.address.address2} fullWidth margin="dense" />
+          <TextField label="City" value={row.address.city} fullWidth margin="dense" />
+          <TextField label="State" value={row.address.state} fullWidth margin="dense" />
+          <TextField label="Zipcode" value={row.address.zipcode} fullWidth margin="dense" />
+          <TextField label="Country" value={row.address.country} fullWidth margin="dense" />
+          {extraFields?.map((field) => (
+            <TextField label={field.label} value={field.value} fullWidth margin="dense" />
+          ))}
+        </>
+      );
+    }
+    return (
+      <>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           {firstName} {middleName} {lastName}
         </Typography>
@@ -63,6 +76,19 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
             {field.label}: {field.value}
           </Typography>
         ))}
+      </>
+    );
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        {renderModalContent()}
         {displayButtons()}
       </Box>
     </Modal>
