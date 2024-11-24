@@ -4,10 +4,11 @@ import { PatientDetails } from './view/useFetchPatients';
 const style = {
   m: 4,
   p: 4,
-  height: '80vh',
+  height: '50vh',
+  width: '50vw',
+  margin: 'auto',
   bgcolor: 'background.paper',
   display: 'flex',
-  alignItems: 'center',
   flexDirection: 'column',
   overflowY: 'auto',
 };
@@ -24,7 +25,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     middleName,
     lastName,
     address: { street, address2, city, state, zipcode, country },
-    extraFields: [{ label, value }],
+    extraFields,
   } = row;
   return (
     <Modal
@@ -35,14 +36,19 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Name: {firstName} {middleName} {lastName}
+          {firstName} {middleName} {lastName}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Address: {street} {address2} {city} {state} {zipcode} {country}
+          {street} {address2} {city} {state} {zipcode} {country}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          {label}: {value}
+          Most recent visit: 01/01/2020
         </Typography>
+        {extraFields?.map((field) => (
+          <Typography id="modal-modal-description" sx={{ mt: 2 }} key={field.label}>
+            {field.label}: {field.value}
+          </Typography>
+        ))}
       </Box>
     </Modal>
   );
