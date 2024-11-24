@@ -29,6 +29,19 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     address: { street, address2, city, state, zipcode, country },
     extraFields,
   } = row;
+
+  const displayButtons = () => {
+    if (isOnEditMode) {
+      return (
+        <>
+          <Button onClick={() => setIsOnEditMode(false)}>Cancel</Button>
+          <Button onClick={() => handleClose()}>Save</Button>
+        </>
+      );
+    } else {
+      return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
+    }
+  };
   return (
     <Modal
       open={open}
@@ -51,21 +64,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
             {field.label}: {field.value}
           </Typography>
         ))}
-        {!isOnEditMode && (
-          <Box sx={{ mt: 3 }}>
-            <Button onClick={() => setIsOnEditMode(true)} variant="contained">
-              Edit
-            </Button>
-          </Box>
-        )}
-        {isOnEditMode && (
-          <Box sx={{ mt: 3 }}>
-            <Button variant="contained">Save</Button>
-            <Button onClick={() => setIsOnEditMode(false)} variant="contained">
-              Cancel
-            </Button>
-          </Box>
-        )}
+        {displayButtons()}
       </Box>
     </Modal>
   );
