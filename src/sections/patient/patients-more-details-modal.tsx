@@ -1,4 +1,5 @@
-import { Modal, Box, Typography, Grid } from '@mui/material';
+import { useState } from 'react';
+import { Modal, Box, Typography, Button } from '@mui/material';
 import { PatientDetails } from './view/useFetchPatients';
 
 const style = {
@@ -19,6 +20,7 @@ type MoreDetailsModalProps = {
   row: PatientDetails;
 };
 const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
+  const [isOnEditMode, setIsOnEditMode] = useState(false);
   const handleClose = () => setOpen(false);
   const {
     firstName,
@@ -49,6 +51,21 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
             {field.label}: {field.value}
           </Typography>
         ))}
+        {!isOnEditMode && (
+          <Box sx={{ mt: 3 }}>
+            <Button onClick={() => setIsOnEditMode(true)} variant="contained">
+              Edit
+            </Button>
+          </Box>
+        )}
+        {isOnEditMode && (
+          <Box sx={{ mt: 3 }}>
+            <Button variant="contained">Save</Button>
+            <Button onClick={() => setIsOnEditMode(false)} variant="contained">
+              Cancel
+            </Button>
+          </Box>
+        )}
       </Box>
     </Modal>
   );
