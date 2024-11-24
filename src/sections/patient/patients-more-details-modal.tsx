@@ -38,9 +38,8 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
           <Button onClick={() => handleClose()}>Save</Button>
         </>
       );
-    } else {
-      return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
     }
+    return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
   };
   return (
     <Modal
