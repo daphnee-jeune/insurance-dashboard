@@ -45,10 +45,22 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   };
 
   const handleFieldChange = (field: string, value: string) => {
-    setEditedRow((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    if (field.includes('.')) {
+      const [parentField, childField] = field.split('.');
+
+      setEditedRow((prev) => ({
+        ...prev,
+        [parentField]: {
+          ...prev[parentField],
+          [childField]: value,
+        },
+      }));
+    } else {
+      setEditedRow((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    }
   };
 
   const renderModalContent = () => {
