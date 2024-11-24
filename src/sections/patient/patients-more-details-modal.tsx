@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Modal, Box, Typography, Button, TextField } from '@mui/material';
 import { PatientDetails } from './view/useFetchPatients';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
 
 const style = {
   m: 4,
@@ -72,10 +74,16 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     }
   };
 
-  const updatePatientDetails = () => {
-    console.log("Updated info:", editedRow);
-    setIsOnEditMode(false);
-    handleClose();
+  const updatePatientDetails = async () => {
+    try {
+      const docRef = doc(db, 'patientFormData', row.id);
+      await updateDoc(docRef, { ...editedRow, id: docRef.id });
+      setIsOnEditMode(false);
+      handleClose();
+      console.log('SUCCESS')
+    } catch (err) {
+      console.error("OOPS", err);
+    }
   }
   const renderModalContent = () => {
     if (isOnEditMode) {
