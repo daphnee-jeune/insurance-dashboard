@@ -21,6 +21,8 @@ type MoreDetailsModalProps = {
 };
 const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [isOnEditMode, setIsOnEditMode] = useState(false);
+  const [editedRow, setEditedRow] = useState<PatientDetails>(row);
+
   const handleClose = () => setOpen(false);
   const {
     firstName,
@@ -41,21 +43,89 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     }
     return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
   };
+
+  const handleFieldChange = (field: string, value: string) => {
+    setEditedRow((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   const renderModalContent = () => {
     if (isOnEditMode) {
       return (
         <>
-          <TextField label="First Name" value={firstName} fullWidth margin="dense" />
-          <TextField label="Middle Name" value={middleName} fullWidth margin="dense" />
-          <TextField label="Last Name" value={lastName} fullWidth margin="dense" />
-          <TextField label="Street" value={street} fullWidth margin="dense" />
-          <TextField label="Address Line 2" value={address2} fullWidth margin="dense" />
-          <TextField label="City" value={city} fullWidth margin="dense" />
-          <TextField label="State" value={state} fullWidth margin="dense" />
-          <TextField label="Zipcode" value={zipcode} fullWidth margin="dense" />
-          <TextField label="Country" value={country} fullWidth margin="dense" />
-          {extraFields?.map((field) => (
-            <TextField label={field.label} value={field.value} fullWidth margin="dense" />
+          <TextField
+            label="First Name"
+            value={editedRow.firstName}
+            onChange={(e) => handleFieldChange('firstName', e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="Middle Name"
+            value={editedRow.middleName}
+            onChange={(e) => handleFieldChange('middleName', e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="Last Name"
+            value={editedRow.lastName}
+            onChange={(e) => handleFieldChange('lastName', e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="Street"
+            value={editedRow.address.street}
+            onChange={(e) => handleFieldChange('address.street', e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="Address Line 2"
+            value={editedRow.address.address2}
+            onChange={(e) => handleFieldChange('address.address2', e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="City"
+            value={editedRow.address.city}
+            onChange={(e) => handleFieldChange('address.city', e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="State"
+            value={editedRow.address.state}
+            onChange={(e) => handleFieldChange('address.state', e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="Zipcode"
+            value={editedRow.address.zipcode}
+            onChange={(e) => handleFieldChange('address.zipcode', e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="Country"
+            value={editedRow.address.country}
+            onChange={(e) => handleFieldChange('address.country', e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          {editedRow.extraFields?.map((field) => (
+            <TextField
+              label={field.label}
+              value={field.value}
+              onChange={(e) => handleFieldChange('extraFields.value', e.target.value)}
+              fullWidth
+              margin="dense"
+            />
           ))}
         </>
       );
