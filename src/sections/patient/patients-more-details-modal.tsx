@@ -32,6 +32,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     extraFields,
   } = row;
 
+
   const displayButtons = () => {
     if (isOnEditMode) {
       return (
@@ -44,8 +45,16 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
   };
 
-  const handleFieldChange = (field: string, value: string) => {
-    if (field.includes('.')) {
+  const handleFieldChange = (field: string, value: string, index?: number) => {
+    if (field === 'extraFields') {
+      setEditedRow((prev) => {
+        const updatedExtraFields = [...prev.extraFields];
+        if (index !== undefined) {
+          updatedExtraFields[index] = { ...updatedExtraFields[index], value };
+        }
+        return { ...prev, extraFields: updatedExtraFields };
+      });
+    } else if (field.includes('.')) {
       const [parentField, childField] = field.split('.');
 
       setEditedRow((prev) => ({
@@ -130,11 +139,12 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
             fullWidth
             margin="dense"
           />
-          {editedRow.extraFields?.map((field) => (
+          {editedRow.extraFields?.map((field, index) => (
             <TextField
+              key={index}
               label={field.label}
               value={field.value}
-              onChange={(e) => handleFieldChange('extraFields.value', e.target.value)}
+              onChange={(e) => handleFieldChange('extraFields', e.target.value, index)}
               fullWidth
               margin="dense"
             />
