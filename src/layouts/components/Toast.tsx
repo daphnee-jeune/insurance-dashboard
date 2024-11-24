@@ -4,7 +4,7 @@ type ToastProps = {
   open: boolean;
   handleClose: () => void;
   copy: string;
-  action: string;
+  action?: string;
 }
 const Toast = ({ open, handleClose, copy, action }: ToastProps) => {
   const alertType = action === 'updated' ? 'success' : 'error';

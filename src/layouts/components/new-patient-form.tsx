@@ -16,7 +16,7 @@ import { db } from '../../firebase';
 
 type Address = {
   street: string;
-  address2: string;
+  address2?: string;
   state: string;
   city: string;
   zipcode: string;
@@ -35,7 +35,7 @@ export type FormData = {
   dateOfBirth: string;
   address: Address;
   statuses: string[];
-  extraFields: ExtraField[];
+  extraFields?: ExtraField[];
 };
 
 type NewPatientFormProps = {
@@ -97,11 +97,11 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
   const addExtraField = () => {
     setFormData((prev) => ({
       ...prev,
-      extraFields: [...prev.extraFields, { label: '', value: '' }],
+      extraFields: prev.extraFields && [...prev.extraFields, { label: '', value: '' }],
     }));
   };
   const handleExtraFieldChange = (index: number, field: keyof ExtraField, value: string) => {
-    const updatedFields = [...formData.extraFields];
+    const updatedFields = formData.extraFields && [...formData.extraFields];
     updatedFields[index][field] = value;
     setFormData((prev) => ({
       ...prev,
@@ -281,7 +281,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
                 </FormGroup>
               </Grid>
               <Grid item xs={12}>
-                {formData.extraFields.map((field, index) => (
+                {formData.extraFields?.map((field, index) => (
                   <Grid container spacing={1} key={index} sx={{ mb: 2 }}>
                     <Grid item xs={6}>
                       <TextField

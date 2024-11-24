@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react';
 import {
   TextField,
   Button,
-  Popover,
   TableRow,
   TableCell,
   Box,
@@ -12,6 +11,7 @@ import {
   Chip,
 } from '@mui/material';
 
+
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -19,7 +19,7 @@ import { PatientDetails } from './view/useFetchPatients';
 
 import Toast from '../../layouts/components/Toast';
 import { db } from '../../firebase';
-import PatientsPopoverMenu from './patients-popover-menu';
+import PatientPopoverMenu from './patients-popover-menu';
 
 type PatientTableRowProps = {
   row: PatientDetails;
@@ -226,14 +226,13 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         </TableCell>
       </TableRow>
       {/* Popover Menu */}
-      <PatientsPopoverMenu
+      <PatientPopoverMenu
         openPopover={openPopover}
         handleClosePopover={handleClosePopover}
         handleEditRow={handleEditRow}
         handleDeletePatientRecord={() => handleDeletePatientRecord(row.id)}
-        rowId={row.id}
+        row={row}
       />
-      {/* Success and error toasts */}
       {showSuccessToast && (
         <Toast
           open={showSuccessToast}
