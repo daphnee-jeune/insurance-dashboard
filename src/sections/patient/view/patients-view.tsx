@@ -9,6 +9,7 @@ import {
   Typography,
   TableContainer,
   TablePagination,
+  CircularProgress,
 } from '@mui/material';
 
 import { _users } from 'src/_mock';
@@ -84,30 +85,34 @@ export function PatientsView() {
                   { id: '' },
                 ]}
               />
-              <TableBody>
-                {filteredPatients
-                  ?.slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row) => (
-                    <PatientsTableRow
-                      key={row.firstName + row.lastName}
-                      row={row}
-                      selected={table.selected.includes(`${row.firstName} ${row.lastName}`)}
-                      onSelectRow={() => table.onSelectRow(`${row.firstName} ${row.lastName}`)}
-                    />
-                  ))}
+              {loading ? (
+                <CircularProgress />
+              ) : (
+                <TableBody>
+                  {filteredPatients
+                    ?.slice(
+                      table.page * table.rowsPerPage,
+                      table.page * table.rowsPerPage + table.rowsPerPage
+                    )
+                    .map((row) => (
+                      <PatientsTableRow
+                        key={row.firstName + row.lastName}
+                        row={row}
+                        selected={table.selected.includes(`${row.firstName} ${row.lastName}`)}
+                        onSelectRow={() => table.onSelectRow(`${row.firstName} ${row.lastName}`)}
+                      />
+                    ))}
 
-                <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
-                {(patientNotFound || isTableEmpty) && (
-                  <EmptyTable
-                    searchQuery={filterName}
-                    isTableEmpty={isTableEmpty}
-                    handleOpen={handleOpen}
-                  />
-                )}
-              </TableBody>
+                  <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
+                  {(patientNotFound || isTableEmpty) && (
+                    <EmptyTable
+                      searchQuery={filterName}
+                      isTableEmpty={isTableEmpty}
+                      handleOpen={handleOpen}
+                    />
+                  )}
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
         </Scrollbar>

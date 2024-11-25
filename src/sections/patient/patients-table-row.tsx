@@ -14,7 +14,7 @@ import {
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import { PatientDetails } from '../../hooks/useFetchPatients';
+import usePatients, { PatientDetails } from '../../hooks/useFetchPatients';
 
 import Toast from '../../layouts/components/Toast';
 import { db } from '../../firebase';
@@ -34,6 +34,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [action, setAction] = useState('');
 
+  const { refetch } = usePatients();
   const statusesOptions = ['Churned', 'Onboarding', 'Inquiry', 'Active'];
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
