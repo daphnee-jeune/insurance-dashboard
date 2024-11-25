@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
+import Toast from './Toast';
 
 type Address = {
   street: string;
@@ -70,6 +71,9 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
     statuses: [],
     extraFields: [],
   });
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+
   const handleClose = () => setOpen(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -116,9 +120,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
     e.preventDefault();
     try {
       await addDoc(dbref, formData);
-      // Show success message
-      console.log('Success');
-      setOpen(false);
+      setShowSuccessToast(true);
       // Reset form data
       setFormData({
         firstName: '',
@@ -137,8 +139,8 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
         extraFields: [],
       });
     } catch (err) {
-      // show error toast
-      console.log('Error');
+      setShowErrorToast(true);
+      console.log('There was an error creating this patient record: ', err);
     }
   };
 
@@ -314,6 +316,20 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
           </form>
         </Box>
       </Modal>
+      {showSuccessToast && (
+        <Toast
+          open={showSuccessToast}
+          handleClose={() => setShowSuccessToast(false)}
+          copy="Patient record was successfully created!"
+        />
+      )}
+      {showErrorToast && (
+        <Toast
+          open={showErrorToast}
+          handleClose={() => setShowErrorToast(false)}
+          copy="Patient record was not successfully created. Please try again!"
+        />
+      )}
     </div>
   );
 };
