@@ -59,7 +59,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     }
     return (
       <Grid>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
           <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>
         </Box>
       </Grid>
@@ -214,6 +214,12 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
       <>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           {firstName} {middleName} {lastName}
+        </Typography>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+         {Math.floor(Math.random() / 2) ? "Male" : "Female"}
+        </Typography>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+         {Math.floor(Math.random() * 50)}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           {street} {address2} {city} {state} {zipcode} {country}
