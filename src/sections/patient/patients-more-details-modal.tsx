@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Box, Typography, Button, TextField, IconButton } from '@mui/material';
 import { doc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from './view/useFetchPatients';
@@ -29,6 +29,9 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
 
+  useEffect(() => {
+    setShowErrorToast(true);
+  }, [row]);
   const handleClose = () => setOpen(false);
   const {
     firstName,
@@ -79,14 +82,14 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     try {
       const docRef = doc(db, 'patientFormData', row.id);
       await updateDoc(docRef, { ...editedRow, id: docRef.id });
-      setIsOnEditMode(false);
       setShowSuccessToast(true);
-      handleClose();
+      setIsOnEditMode(false);
     } catch (err) {
       setShowErrorToast(true);
       console.error('error updating patient record: ', err);
     }
   };
+
   const renderModalContent = () => {
     if (isOnEditMode) {
       return (
