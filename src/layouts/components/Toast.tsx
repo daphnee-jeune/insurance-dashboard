@@ -4,10 +4,10 @@ type ToastProps = {
   open: boolean;
   handleClose: () => void;
   copy: string;
-  action?: string;
-}
-const Toast = ({ open, handleClose, copy, action }: ToastProps) => {
-  const alertType = action === 'updated' ? 'success' : 'error';
+};
+const Toast = ({ open, handleClose, copy }: ToastProps) => {
+  const alertType = open ? 'success' : 'error';
+
   return (
     <Snackbar
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
