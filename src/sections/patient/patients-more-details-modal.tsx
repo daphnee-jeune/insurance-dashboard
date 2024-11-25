@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Box, Typography, Button, TextField, IconButton, Grid } from '@mui/material';
+import { Modal, Box, Typography, Button, TextField, Divider, Grid } from '@mui/material';
 import { doc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from './view/useFetchPatients';
 import { db } from '../../firebase';
@@ -8,7 +8,6 @@ import { ExtraField } from '../../layouts/components/new-patient-form';
 import Toast from '../../layouts/components/Toast';
 
 const style = {
-  m: 4,
   p: 4,
   height: '50vh',
   width: '50vw',
@@ -32,6 +31,8 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [editedRow, setEditedRow] = useState<PatientDetails>(row);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
+
+  const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
   const handleClose = () => setOpen(false);
   const {
@@ -212,20 +213,11 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     }
     return (
       <>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {firstName} {middleName} {lastName}
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          Blood type: {bloodTypes[Math.floor(Math.random() * bloodTypes.length - 1)]}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-         {Math.floor(Math.random() / 2) ? "Male" : "Female"}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-         {Math.floor(Math.random() * 50)}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          {street} {address2} {city} {state} {zipcode} {country}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Most recent visit: 01/01/2020
+          Address: {street} {address2} {city} {state} {zipcode} {country}
         </Typography>
         {extraFields?.map((field) => (
           <Typography id="modal-modal-description" sx={{ mt: 2 }} key={field.label}>
@@ -252,6 +244,18 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mt: 1.7 }}>
+            {firstName} {middleName} {lastName}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {Math.floor(Math.random() / 2) ? 'Male' : 'Female'}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Age: {Math.floor(Math.random() * 50)}
+          </Typography>
+        </Box>
+        <Divider flexItem />
           {renderModalContent()}
           {displayButtons()}
         </Box>
