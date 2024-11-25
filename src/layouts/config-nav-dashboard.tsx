@@ -12,9 +12,4 @@ export const navData = [
     path: '/',
     icon: icon('ic-analytics'),
   },
-  {
-    title: 'Sign in',
-    path: '/sign-in',
-    icon: icon('ic-lock'),
-  },
 ];
