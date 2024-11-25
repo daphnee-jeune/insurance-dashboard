@@ -5,7 +5,7 @@ import useFetchPatients from '../patient/view/useFetchPatients';
 type EmptyTableProps = TableRowProps & {
   searchQuery: string;
   isTableEmpty: boolean;
-  handleOpen: () => boolean;
+  handleOpen: () => void;
 };
 
 const EmptyTable = ({ searchQuery, isTableEmpty, handleOpen }: EmptyTableProps) => {
@@ -18,8 +18,8 @@ const EmptyTable = ({ searchQuery, isTableEmpty, handleOpen }: EmptyTableProps) 
       <TableCell align="center" colSpan={7}>
         <Box sx={{ py: 15, textAlign: 'center' }}>
           <Typography sx={{ mb: 1 }}>{tableCopy}</Typography>
-        {isTableEmpty && <Button onClick={handleOpen}>Create new record</Button>}
-        {error && <Button onClick={refetch}>Refetch</Button>}
+          {isTableEmpty && <Button onClick={handleOpen}>Create new record</Button>}
+          {error && <Button onClick={refetch}>Refetch</Button>}
         </Box>
       </TableCell>
     </TableRow>
