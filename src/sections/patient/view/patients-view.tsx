@@ -101,7 +101,7 @@ export function PatientsView() {
 
                 <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
                 {(patientNotFound || isTableEmpty) && (
-                  <EmptyTable searchQuery={filterName} isTableEmpty={isTableEmpty} />
+                  <EmptyTable searchQuery={filterName} isTableEmpty={isTableEmpty} handleOpen={handleOpen} />
                 )}
               </TableBody>
             </Table>
