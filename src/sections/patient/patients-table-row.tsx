@@ -11,7 +11,6 @@ import {
   Chip,
 } from '@mui/material';
 
-
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -238,7 +237,6 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           open={showSuccessToast}
           handleClose={() => setShowSuccessToast(false)}
           copy={`Patient record was successfully ${action}!`}
-          action={action}
         />
       )}
       {showErrorToast && (
@@ -246,7 +244,6 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           open={showErrorToast}
           handleClose={() => setShowErrorToast(false)}
           copy={`Patient record was not successfully ${action}. Please try again!`}
-          action={action}
         />
       )}
     </>

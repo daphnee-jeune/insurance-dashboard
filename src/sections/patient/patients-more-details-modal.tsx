@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Box, Typography, Button, TextField, IconButton } from '@mui/material';
 import { doc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from './view/useFetchPatients';
 import { db } from '../../firebase';
+import { ExtraField } from '../../layouts/components/new-patient-form';
 
 import Toast from '../../layouts/components/Toast';
 
@@ -12,10 +13,12 @@ const style = {
   height: '50vh',
   width: '50vw',
   margin: 'auto',
+  marginTop: '10vh',
   bgcolor: 'background.paper',
   display: 'flex',
   flexDirection: 'column',
   overflowY: 'auto',
+  borderRadius: '1.5rem'
 };
 
 type MoreDetailsModalProps = {
@@ -23,6 +26,7 @@ type MoreDetailsModalProps = {
   setOpen: (open: boolean) => void;
   row: PatientDetails;
 };
+
 const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [isOnEditMode, setIsOnEditMode] = useState(false);
   const [editedRow, setEditedRow] = useState<PatientDetails>(row);
@@ -50,24 +54,29 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
   };
 
-  const handleFieldChange = (field: string, value: string, index?: number) => {
-    if (field === 'extraFields' && index !== undefined) {
+  const handleFieldChange = (field: string, value: string | ExtraField, index?: number) => {
+    if (field === "extraFields" && index !== undefined) {
+      // ExtraFields 
       setEditedRow((prev) => {
         const updatedExtraFields = [...(prev.extraFields || [])];
-        updatedExtraFields[index] = value; // Update the specific field
+        if (typeof value === "object" && "label" in value && "value" in value) {
+          updatedExtraFields[index] = value; // update entire ExtraField object
+        }
         return { ...prev, extraFields: updatedExtraFields };
       });
-    } else if (field.includes('.')) {
-      const [parentField, childField] = field.split('.');
-
+    } else if (field.includes(".")) {
+      // Nested field updates
+      const [parentField, childField] = field.split(".");
+  
       setEditedRow((prev) => ({
         ...prev,
         [parentField]: {
-          ...prev[parentField],
+          ...(prev[parentField] || {}), // Ensure the parent field exists
           [childField]: value,
         },
       }));
     } else {
+      // Non nested field updates
       setEditedRow((prev) => ({
         ...prev,
         [field]: value,
@@ -79,14 +88,14 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     try {
       const docRef = doc(db, 'patientFormData', row.id);
       await updateDoc(docRef, { ...editedRow, id: docRef.id });
-      setIsOnEditMode(false);
       setShowSuccessToast(true);
-      handleClose();
+      setIsOnEditMode(false);
     } catch (err) {
       setShowErrorToast(true);
       console.error('error updating patient record: ', err);
     }
   };
+
   const renderModalContent = () => {
     if (isOnEditMode) {
       return (
