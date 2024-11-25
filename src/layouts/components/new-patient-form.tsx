@@ -24,7 +24,7 @@ type Address = {
   country: string;
 };
 
-type ExtraField = {
+export type ExtraField = {
   label: string;
   value: string;
 };
@@ -105,7 +105,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
     }));
   };
   const handleExtraFieldChange = (index: number, field: keyof ExtraField, value: string) => {
-    const updatedFields = formData.extraFields && [...formData.extraFields];
+    const updatedFields = formData.extraFields && [...formData.extraFields] || [];
     updatedFields[index][field] = value;
     setFormData((prev) => ({
       ...prev,

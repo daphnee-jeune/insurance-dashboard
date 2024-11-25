@@ -3,6 +3,7 @@ import { Modal, Box, Typography, Button, TextField, IconButton } from '@mui/mate
 import { doc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from './view/useFetchPatients';
 import { db } from '../../firebase';
+import { ExtraField } from '../../layouts/components/new-patient-form';
 
 import Toast from '../../layouts/components/Toast';
 
@@ -23,6 +24,12 @@ type MoreDetailsModalProps = {
   setOpen: (open: boolean) => void;
   row: PatientDetails;
 };
+
+type EditedRow = {
+  extraFields?: ExtraField[];
+  [key: string]: any; // Allows for dynamic nested fields
+};
+
 const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [isOnEditMode, setIsOnEditMode] = useState(false);
   const [editedRow, setEditedRow] = useState<PatientDetails>(row);
@@ -53,24 +60,29 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
   };
 
-  const handleFieldChange = (field: string, value: string, index?: number) => {
-    if (field === 'extraFields' && index !== undefined) {
+  const handleFieldChange = (field: string, value: string | ExtraField, index?: number) => {
+    if (field === "extraFields" && index !== undefined) {
+      // ExtraFields 
       setEditedRow((prev) => {
         const updatedExtraFields = [...(prev.extraFields || [])];
-        updatedExtraFields[index] = value; // Update the specific field
+        if (typeof value === "object" && "label" in value && "value" in value) {
+          updatedExtraFields[index] = value; // update entire ExtraField object
+        }
         return { ...prev, extraFields: updatedExtraFields };
       });
-    } else if (field.includes('.')) {
-      const [parentField, childField] = field.split('.');
-
+    } else if (field.includes(".")) {
+      // Nested field updates
+      const [parentField, childField] = field.split(".");
+  
       setEditedRow((prev) => ({
         ...prev,
         [parentField]: {
-          ...prev[parentField],
+          ...(prev[parentField] || {}), // Ensure the parent field exists
           [childField]: value,
         },
       }));
     } else {
+      // Non nested field updates
       setEditedRow((prev) => ({
         ...prev,
         [field]: value,
