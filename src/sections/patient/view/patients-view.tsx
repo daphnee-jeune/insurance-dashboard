@@ -1,6 +1,15 @@
 import { useState, useCallback } from 'react';
 
-import { Box, Card, Table, Button, TableBody, Typography, TableContainer, TablePagination } from '@mui/material';
+import {
+  Box,
+  Card,
+  Table,
+  Button,
+  TableBody,
+  Typography,
+  TableContainer,
+  TablePagination,
+} from '@mui/material';
 
 import { _users } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -8,7 +17,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { TableNoData } from '../table-no-data';
+import EmptyTable from '../table-no-data';
 import { PatientsTableRow } from '../patients-table-row';
 import { PatientsTableHead } from '../patients-table-head';
 import { TableEmptyRows } from '../table-empty-rows';
@@ -34,7 +43,7 @@ export function PatientsView() {
   });
 
   const patientNotFound = !filteredPatients?.length && !!filterName;
-  const isTableEmpty = !patientDetails?.length
+  const isTableEmpty = !patientDetails?.length;
   const handleOpen = () => setOpen(true);
 
   return (
@@ -90,10 +99,10 @@ export function PatientsView() {
                     />
                   ))}
 
-                <TableEmptyRows
-                  emptyRows={table.rowsPerPage - filteredPatients.length}
-                />
-                {(patientNotFound || isTableEmpty) && <TableNoData searchQuery={filterName} isTableEmpty={isTableEmpty} />}
+                <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
+                {(patientNotFound || isTableEmpty) && (
+                  <EmptyTable searchQuery={filterName} isTableEmpty={isTableEmpty} />
+                )}
               </TableBody>
             </Table>
           </TableContainer>
