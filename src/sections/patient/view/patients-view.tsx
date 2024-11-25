@@ -85,11 +85,18 @@ export function PatientsView() {
                   { id: '' },
                 ]}
               />
-              {loading ? (
-                <CircularProgress />
-              ) : (
-                <TableBody>
-                  {filteredPatients
+              <TableBody>
+                {loading ? (
+                  <CircularProgress
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  />
+                ) : (
+                  filteredPatients
                     ?.slice(
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
@@ -101,18 +108,18 @@ export function PatientsView() {
                         selected={table.selected.includes(`${row.firstName} ${row.lastName}`)}
                         onSelectRow={() => table.onSelectRow(`${row.firstName} ${row.lastName}`)}
                       />
-                    ))}
+                    ))
+                )}
 
-                  <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
-                  {(patientNotFound || isTableEmpty) && (
-                    <EmptyTable
-                      searchQuery={filterName}
-                      isTableEmpty={isTableEmpty}
-                      handleOpen={handleOpen}
-                    />
-                  )}
-                </TableBody>
-              )}
+                <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
+                {(patientNotFound || isTableEmpty) && (
+                  <EmptyTable
+                    searchQuery={filterName}
+                    isTableEmpty={isTableEmpty}
+                    handleOpen={handleOpen}
+                  />
+                )}
+              </TableBody>
             </Table>
           </TableContainer>
         </Scrollbar>
