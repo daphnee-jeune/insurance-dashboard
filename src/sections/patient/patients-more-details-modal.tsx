@@ -13,10 +13,12 @@ const style = {
   height: '50vh',
   width: '50vw',
   margin: 'auto',
+  marginTop: '10vh',
   bgcolor: 'background.paper',
   display: 'flex',
   flexDirection: 'column',
   overflowY: 'auto',
+  borderRadius: '1.5rem'
 };
 
 type MoreDetailsModalProps = {
