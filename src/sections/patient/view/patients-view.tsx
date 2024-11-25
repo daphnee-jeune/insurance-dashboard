@@ -1,13 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
+import { Box, Card, Table, Button, TableBody, Typography, TableContainer, TablePagination } from '@mui/material';
 
 import { _users } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -40,8 +33,8 @@ export function PatientsView() {
       .includes(filterName.toLowerCase());
   });
 
-  const notFound = !filteredPatients?.length && !!filterName;
-
+  const patientNotFound = !filteredPatients?.length && !!filterName;
+  const isTableEmpty = !patientDetails?.length
   const handleOpen = () => setOpen(true);
 
   return (
@@ -98,11 +91,9 @@ export function PatientsView() {
                   ))}
 
                 <TableEmptyRows
-                  height={68}
                   emptyRows={table.rowsPerPage - filteredPatients.length}
                 />
-
-                {notFound && <TableNoData searchQuery={filterName} />}
+                {(patientNotFound || isTableEmpty) && <TableNoData searchQuery={filterName} isTableEmpty={isTableEmpty} />}
               </TableBody>
             </Table>
           </TableContainer>

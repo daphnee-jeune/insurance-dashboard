@@ -1,6 +1,4 @@
-import TableRow from '@mui/material/TableRow';
-import TableHead from '@mui/material/TableHead';
-import TableCell from '@mui/material/TableCell';
+import { TableRow, TableHead, TableCell } from '@mui/material';
 
 type PatientsTableHeadProps = {
   headLabel: Record<string, any>[];
