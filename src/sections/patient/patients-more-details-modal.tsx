@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Modal, Box, Typography, Button, TextField, IconButton } from '@mui/material';
+import { useState } from 'react';
+import { Modal, Box, Typography, Button, TextField, IconButton, Grid } from '@mui/material';
 import { doc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from './view/useFetchPatients';
 import { db } from '../../firebase';
@@ -18,7 +18,7 @@ const style = {
   display: 'flex',
   flexDirection: 'column',
   overflowY: 'auto',
-  borderRadius: '1.5rem'
+  borderRadius: '1.5rem',
 };
 
 type MoreDetailsModalProps = {
@@ -45,29 +45,41 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const displayButtons = () => {
     if (isOnEditMode) {
       return (
-        <>
-          <Button onClick={() => setIsOnEditMode(false)}>Cancel</Button>
-          <Button onClick={updatePatientDetails}>Save</Button>
-        </>
+        <Grid item xs={12}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button variant="contained" color="error" onClick={() => setIsOnEditMode(false)}>
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={updatePatientDetails}>
+              Save
+            </Button>
+          </Box>
+        </Grid>
       );
     }
-    return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
+    return (
+      <Grid>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+          <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>
+        </Box>
+      </Grid>
+    );
   };
 
   const handleFieldChange = (field: string, value: string | ExtraField, index?: number) => {
-    if (field === "extraFields" && index !== undefined) {
-      // ExtraFields 
+    if (field === 'extraFields' && index !== undefined) {
+      // ExtraFields
       setEditedRow((prev) => {
         const updatedExtraFields = [...(prev.extraFields || [])];
-        if (typeof value === "object" && "label" in value && "value" in value) {
+        if (typeof value === 'object' && 'label' in value && 'value' in value) {
           updatedExtraFields[index] = value; // update entire ExtraField object
         }
         return { ...prev, extraFields: updatedExtraFields };
       });
-    } else if (field.includes(".")) {
+    } else if (field.includes('.')) {
       // Nested field updates
-      const [parentField, childField] = field.split(".");
-  
+      const [parentField, childField] = field.split('.');
+
       setEditedRow((prev) => ({
         ...prev,
         [parentField]: {
@@ -188,9 +200,13 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
               />
             </Box>
           ))}
-          <IconButton color="primary" onClick={addExtraField}>
-            Add custom fields
-          </IconButton>
+          <Grid>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button color="primary" onClick={addExtraField}>
+                Add more information
+              </Button>
+            </Box>
+          </Grid>
         </>
       );
     }
