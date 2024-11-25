@@ -223,7 +223,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
       extraFields: [...(prev.extraFields || []), { label: '', value: '' }],
     }));
   };
-  console.log(showErrorToast)
+
   return (
     <>
       <Modal
