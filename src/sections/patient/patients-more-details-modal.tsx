@@ -36,9 +36,6 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
 
-  useEffect(() => {
-    setShowErrorToast(true);
-  }, [row]);
   const handleClose = () => setOpen(false);
   const {
     firstName,
@@ -226,7 +223,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
       extraFields: [...(prev.extraFields || []), { label: '', value: '' }],
     }));
   };
-
+  console.log(showErrorToast)
   return (
     <>
       <Modal
