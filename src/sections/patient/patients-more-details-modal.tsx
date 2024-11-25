@@ -25,11 +25,6 @@ type MoreDetailsModalProps = {
   row: PatientDetails;
 };
 
-type EditedRow = {
-  extraFields?: ExtraField[];
-  [key: string]: any; // Allows for dynamic nested fields
-};
-
 const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [isOnEditMode, setIsOnEditMode] = useState(false);
   const [editedRow, setEditedRow] = useState<PatientDetails>(row);

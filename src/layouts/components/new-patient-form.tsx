@@ -52,6 +52,7 @@ const style = {
   display: 'flex',
   flexDirection: 'column',
   overflowY: 'auto',
+  borderRadius: '1.5rem'
 };
 const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
   const statusOptions = ['Inquiry', 'Onboarding', 'Active', 'Churned'];
