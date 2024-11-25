@@ -25,7 +25,7 @@ import { PatientsTableToolbar } from '../patients-table-toolbar';
 
 import NewPatientForm from '../../../layouts/components/new-patient-form';
 
-import useFetchPatients from './useFetchPatients';
+import useFetchPatients from '../../../hooks/useFetchPatients';
 
 export function PatientsView() {
   const table = useTable();
@@ -101,7 +101,11 @@ export function PatientsView() {
 
                 <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
                 {(patientNotFound || isTableEmpty) && (
-                  <EmptyTable searchQuery={filterName} isTableEmpty={isTableEmpty} handleOpen={handleOpen} />
+                  <EmptyTable
+                    searchQuery={filterName}
+                    isTableEmpty={isTableEmpty}
+                    handleOpen={handleOpen}
+                  />
                 )}
               </TableBody>
             </Table>

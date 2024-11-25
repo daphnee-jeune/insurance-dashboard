@@ -14,7 +14,7 @@ import {
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import { PatientDetails } from './view/useFetchPatients';
+import { PatientDetails } from '../../hooks/useFetchPatients';
 
 import Toast from '../../layouts/components/Toast';
 import { db } from '../../firebase';

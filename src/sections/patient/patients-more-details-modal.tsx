@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal, Box, Typography, Button, TextField, Divider, Grid } from '@mui/material';
 import { doc, updateDoc } from 'firebase/firestore';
-import { PatientDetails } from './view/useFetchPatients';
+import { PatientDetails } from '../../hooks/useFetchPatients';
 import { db } from '../../firebase';
 import { ExtraField } from '../../layouts/components/new-patient-form';
 
@@ -244,18 +244,18 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mt: 1.7 }}>
-            {firstName} {middleName} {lastName}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {Math.floor(Math.random() / 2) ? 'Male' : 'Female'}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Age: {Math.floor(Math.random() * 50)}
-          </Typography>
-        </Box>
-        <Divider flexItem />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mt: 1.7 }}>
+              {firstName} {middleName} {lastName}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              {Math.floor(Math.random() / 2) ? 'Male' : 'Female'}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              Age: {Math.floor(Math.random() * 50)}
+            </Typography>
+          </Box>
+          <Divider flexItem />
           {renderModalContent()}
           {displayButtons()}
         </Box>

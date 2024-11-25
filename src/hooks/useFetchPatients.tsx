@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../firebase';
-import { FormData } from '../../../layouts/components/new-patient-form';
+import { db } from '../firebase';
+import { FormData } from '../layouts/components/new-patient-form';
 
 export interface PatientDetails extends FormData {
   id: string;
