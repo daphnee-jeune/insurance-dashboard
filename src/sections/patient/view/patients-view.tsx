@@ -74,18 +74,6 @@ export function PatientsView() {
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <PatientsTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={patientDetails?.length || 0}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    patientDetails?.map((patient) => `${patient.firstName} ${patient.lastName}`) ||
-                      []
-                  )
-                }
                 headLabel={[
                   { id: 'name', label: 'Name' },
                   { id: 'address', label: 'Address' },
