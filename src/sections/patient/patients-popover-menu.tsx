@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Popover, MenuList, MenuItem, menuItemClasses } from '@mui/material';
 import { Iconify } from 'src/components/iconify';
 import MoreDetailsModal from './patients-more-details-modal';
-import { PatientDetails } from './view/useFetchPatients';
+import { PatientDetails } from '../../hooks/useFetchPatients';
 
 type PatientPopoverMenuProps = {
   openPopover: HTMLButtonElement | null;
@@ -58,7 +58,9 @@ const PatientsPopoverMenu = ({
           Delete
         </MenuItem>
       </MenuList>
-      {showMoreDetails && <MoreDetailsModal open={showMoreDetails} setOpen={setShowMoreDetails} row={row}/>}
+      {showMoreDetails && (
+        <MoreDetailsModal open={showMoreDetails} setOpen={setShowMoreDetails} row={row} />
+      )}
     </Popover>
   );
 };

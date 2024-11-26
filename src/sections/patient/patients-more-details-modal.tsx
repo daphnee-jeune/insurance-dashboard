@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Modal, Box, Typography, Button, TextField, IconButton } from '@mui/material';
+import { useState } from 'react';
+import { Modal, Box, Typography, Button, TextField, Divider, Grid } from '@mui/material';
 import { doc, updateDoc } from 'firebase/firestore';
-import { PatientDetails } from './view/useFetchPatients';
+import { PatientDetails } from '../../hooks/useFetchPatients';
 import { db } from '../../firebase';
 import { ExtraField } from '../../layouts/components/new-patient-form';
 
 import Toast from '../../layouts/components/Toast';
 
 const style = {
-  m: 4,
   p: 4,
   height: '50vh',
   width: '50vw',
@@ -18,7 +17,7 @@ const style = {
   display: 'flex',
   flexDirection: 'column',
   overflowY: 'auto',
-  borderRadius: '1.5rem'
+  borderRadius: '1.5rem',
 };
 
 type MoreDetailsModalProps = {
@@ -33,6 +32,8 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
 
+  const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+
   const handleClose = () => setOpen(false);
   const {
     firstName,
@@ -45,29 +46,41 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const displayButtons = () => {
     if (isOnEditMode) {
       return (
-        <>
-          <Button onClick={() => setIsOnEditMode(false)}>Cancel</Button>
-          <Button onClick={updatePatientDetails}>Save</Button>
-        </>
+        <Grid item xs={12}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button variant="contained" color="error" onClick={() => setIsOnEditMode(false)}>
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={updatePatientDetails}>
+              Save
+            </Button>
+          </Box>
+        </Grid>
       );
     }
-    return <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>;
+    return (
+      <Grid>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+          <Button onClick={() => setIsOnEditMode(true)}>Edit</Button>
+        </Box>
+      </Grid>
+    );
   };
 
   const handleFieldChange = (field: string, value: string | ExtraField, index?: number) => {
-    if (field === "extraFields" && index !== undefined) {
-      // ExtraFields 
+    if (field === 'extraFields' && index !== undefined) {
+      // ExtraFields
       setEditedRow((prev) => {
         const updatedExtraFields = [...(prev.extraFields || [])];
-        if (typeof value === "object" && "label" in value && "value" in value) {
+        if (typeof value === 'object' && 'label' in value && 'value' in value) {
           updatedExtraFields[index] = value; // update entire ExtraField object
         }
         return { ...prev, extraFields: updatedExtraFields };
       });
-    } else if (field.includes(".")) {
+    } else if (field.includes('.')) {
       // Nested field updates
-      const [parentField, childField] = field.split(".");
-  
+      const [parentField, childField] = field.split('.');
+
       setEditedRow((prev) => ({
         ...prev,
         [parentField]: {
@@ -188,22 +201,23 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
               />
             </Box>
           ))}
-          <IconButton color="primary" onClick={addExtraField}>
-            Add custom fields
-          </IconButton>
+          <Grid>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button color="primary" onClick={addExtraField}>
+                Add more information
+              </Button>
+            </Box>
+          </Grid>
         </>
       );
     }
     return (
       <>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {firstName} {middleName} {lastName}
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          Blood type: {bloodTypes[Math.floor(Math.random() * bloodTypes.length - 1)]}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          {street} {address2} {city} {state} {zipcode} {country}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Most recent visit: 01/01/2020
+          Address: {street} {address2} {city} {state} {zipcode} {country}
         </Typography>
         {extraFields?.map((field) => (
           <Typography id="modal-modal-description" sx={{ mt: 2 }} key={field.label}>
@@ -230,6 +244,18 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mt: 1.7 }}>
+              {firstName} {middleName} {lastName}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              {Math.floor(Math.random() / 2) ? 'Male' : 'Female'}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              Age: {Math.floor(Math.random() * 50)}
+            </Typography>
+          </Box>
+          <Divider flexItem />
           {renderModalContent()}
           {displayButtons()}
         </Box>

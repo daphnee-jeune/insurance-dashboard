@@ -1,4 +1,4 @@
-import type { PatientDetails } from './view/useFetchPatients';
+import type { PatientDetails } from '../../hooks/useFetchPatients';
 
 // ----------------------------------------------------------------------
 
@@ -70,9 +70,8 @@ export function applyFilter({ inputData, comparator, filterName }: ApplyFilterPr
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (patient) =>
-        `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(filterName.toLowerCase())
+    inputData = inputData.filter((patient) =>
+      `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 

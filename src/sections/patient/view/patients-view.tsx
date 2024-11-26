@@ -1,13 +1,15 @@
 import { useState, useCallback } from 'react';
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
+import {
+  Box,
+  Card,
+  Table,
+  Button,
+  TableBody,
+  Typography,
+  TableContainer,
+  TablePagination,
+} from '@mui/material';
 
 import { _users } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -15,7 +17,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { TableNoData } from '../table-no-data';
+import LoadingIndicator from 'src/components/LoadingIndicator';
+import EmptyTable from '../table-no-data';
 import { PatientsTableRow } from '../patients-table-row';
 import { PatientsTableHead } from '../patients-table-head';
 import { TableEmptyRows } from '../table-empty-rows';
@@ -23,11 +26,11 @@ import { PatientsTableToolbar } from '../patients-table-toolbar';
 
 import NewPatientForm from '../../../layouts/components/new-patient-form';
 
-import useFetchPatients from './useFetchPatients';
+import useFetchPatients from '../../../hooks/useFetchPatients';
 
 export function PatientsView() {
   const table = useTable();
-  const { patientDetails, loading, error } = useFetchPatients();
+  const { patientDetails, loading } = useFetchPatients();
 
   const [filterName, setFilterName] = useState('');
   const [open, setOpen] = useState(false);
@@ -40,8 +43,8 @@ export function PatientsView() {
       .includes(filterName.toLowerCase());
   });
 
-  const notFound = !filteredPatients?.length && !!filterName;
-
+  const patientNotFound = !filteredPatients?.length && !!filterName;
+  const isTableEmpty = !patientDetails?.length;
   const handleOpen = () => setOpen(true);
 
   return (
@@ -74,18 +77,6 @@ export function PatientsView() {
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <PatientsTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={patientDetails?.length || 0}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    patientDetails?.map((patient) => `${patient.firstName} ${patient.lastName}`) ||
-                      []
-                  )
-                }
                 headLabel={[
                   { id: 'name', label: 'Name' },
                   { id: 'address', label: 'Address' },
@@ -95,26 +86,33 @@ export function PatientsView() {
                 ]}
               />
               <TableBody>
-                {filteredPatients
-                  ?.slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row) => (
-                    <PatientsTableRow
-                      key={row.firstName + row.lastName}
-                      row={row}
-                      selected={table.selected.includes(`${row.firstName} ${row.lastName}`)}
-                      onSelectRow={() => table.onSelectRow(`${row.firstName} ${row.lastName}`)}
-                    />
-                  ))}
-
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={table.rowsPerPage - filteredPatients.length}
-                />
-
-                {notFound && <TableNoData searchQuery={filterName} />}
+                {loading ? (
+                  <LoadingIndicator />
+                ) : (
+                  <>
+                    {filteredPatients
+                      ?.slice(
+                        table.page * table.rowsPerPage,
+                        table.page * table.rowsPerPage + table.rowsPerPage
+                      )
+                      .map((row) => (
+                        <PatientsTableRow
+                          key={row.firstName + row.lastName}
+                          row={row}
+                          selected={table.selected.includes(`${row.firstName} ${row.lastName}`)}
+                          onSelectRow={() => table.onSelectRow(`${row.firstName} ${row.lastName}`)}
+                        />
+                      ))}
+                    <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
+                    {(patientNotFound || isTableEmpty) && (
+                      <EmptyTable
+                        searchQuery={filterName}
+                        isTableEmpty={isTableEmpty}
+                        handleOpen={handleOpen}
+                      />
+                    )}
+                  </>
+                )}
               </TableBody>
             </Table>
           </TableContainer>

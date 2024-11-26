@@ -1,32 +1,30 @@
 import type { TableRowProps } from '@mui/material/TableRow';
+import { Box, TableRow, TableCell, Typography, Button } from '@mui/material';
+import useFetchPatients from '../../hooks/useFetchPatients';
 
-import Box from '@mui/material/Box';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
-
-// ----------------------------------------------------------------------
-
-type TableNoDataProps = TableRowProps & {
+type EmptyTableProps = TableRowProps & {
   searchQuery: string;
+  isTableEmpty: boolean;
+  handleOpen: () => void;
 };
 
-export function TableNoData({ searchQuery, ...other }: TableNoDataProps) {
+const EmptyTable = ({ searchQuery, isTableEmpty, handleOpen }: EmptyTableProps) => {
+  const { error, refetch } = useFetchPatients();
+  const tableCopy = isTableEmpty
+    ? 'There are no patient records currently. Click on the button below to create one!'
+    : error
+      ? `There was an error loading the data. Please try again!`
+      : `No results found for '${searchQuery}'. Try typing a different entry.`;
   return (
-    <TableRow {...other}>
+    <TableRow>
       <TableCell align="center" colSpan={7}>
         <Box sx={{ py: 15, textAlign: 'center' }}>
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            Not found
-          </Typography>
-
-          <Typography variant="body2">
-            No results found for &nbsp;
-            <strong>&quot;{searchQuery}&quot;</strong>.
-            <br /> Try checking for typos or using complete words.
-          </Typography>
+          <Typography sx={{ mb: 1 }}>{tableCopy}</Typography>
+          {isTableEmpty && <Button onClick={handleOpen}>Create new record</Button>}
+          {error && <Button onClick={refetch}>Refetch</Button>}
         </Box>
       </TableCell>
     </TableRow>
   );
-}
+};
+export default EmptyTable;

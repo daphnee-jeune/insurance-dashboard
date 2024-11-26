@@ -52,7 +52,7 @@ const style = {
   display: 'flex',
   flexDirection: 'column',
   overflowY: 'auto',
-  borderRadius: '1.5rem'
+  borderRadius: '1.5rem',
 };
 const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
   const statusOptions = ['Inquiry', 'Onboarding', 'Active', 'Churned'];
@@ -106,7 +106,7 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
     }));
   };
   const handleExtraFieldChange = (index: number, field: keyof ExtraField, value: string) => {
-    const updatedFields = formData.extraFields && [...formData.extraFields] || [];
+    const updatedFields = (formData.extraFields && [...formData.extraFields]) || [];
     updatedFields[index][field] = value;
     setFormData((prev) => ({
       ...prev,
@@ -304,14 +304,16 @@ const NewPatientForm = ({ open, setOpen }: NewPatientFormProps) => {
                     </Grid>
                   </Grid>
                 ))}
-                <IconButton color="primary" onClick={addExtraField}>
-                  +
-                </IconButton>
               </Grid>
               <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="primary" fullWidth>
-                  Submit
-                </Button>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                  <IconButton color="primary" onClick={addExtraField}>
+                    +
+                  </IconButton>
+                  <Button type="submit" variant="contained" color="primary">
+                    Submit
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </form>
