@@ -9,7 +9,6 @@ import {
   Typography,
   TableContainer,
   TablePagination,
-  CircularProgress,
 } from '@mui/material';
 
 import { _users } from 'src/_mock';
@@ -27,6 +26,7 @@ import { PatientsTableToolbar } from '../patients-table-toolbar';
 import NewPatientForm from '../../../layouts/components/new-patient-form';
 
 import useFetchPatients from '../../../hooks/useFetchPatients';
+import LoadingIndicator from 'src/components/LoadingIndicator';
 
 export function PatientsView() {
   const table = useTable();
@@ -87,14 +87,7 @@ export function PatientsView() {
               />
               <TableBody>
                 {loading ? (
-                  <CircularProgress
-                    sx={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                    }}
-                  />
+                  <LoadingIndicator />
                 ) : (
                   filteredPatients
                     ?.slice(
