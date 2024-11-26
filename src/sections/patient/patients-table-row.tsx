@@ -76,7 +76,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
     }
   };
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: string |  Record<string, any>) => {
     setEditedRow((prev) => ({
       ...prev,
       [field]: value,
