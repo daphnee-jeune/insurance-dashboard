@@ -159,10 +159,11 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
               size="small"
             />
           ) : (
-            new Date(row.dateOfBirth).toLocaleDateString('en-US', {
+            new Date(editedRow.dateOfBirth).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: '2-digit',
+              timeZone: 'UTC'
             })
           )}
         </TableCell>
