@@ -130,7 +130,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
                 />
               </>
             ) : (
-              `${row.firstName} ${row.middleName} ${row.lastName}`
+              `${editedRow.firstName} ${editedRow.middleName} ${editedRow.lastName}`
             )}
           </Box>
         </TableCell>
@@ -146,7 +146,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
               />
             </>
           ) : (
-            `${row.address.street}, ${row.address.city} ${row.address.state} ${row.address.zipcode} ${row.address.country}`
+            `${editedRow.address.street}, ${editedRow.address.city} ${editedRow.address.state} ${editedRow.address.zipcode} ${editedRow.address.country}`
           )}
         </TableCell>
         {/* Editable DOB */}
@@ -190,16 +190,16 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
           ) : (
             <Label
               color={
-                row.statuses.includes('Churned')
+                editedRow.statuses.includes('Churned')
                   ? 'error'
-                  : row.statuses.includes('Onboarding')
+                  : editedRow.statuses.includes('Onboarding')
                     ? 'warning'
-                    : row.statuses.includes('Inquiry')
+                    : editedRow.statuses.includes('Inquiry')
                       ? 'info'
                       : 'success'
               }
             >
-              {row.statuses[0] || ''}
+              {editedRow.statuses[0] || ''}
             </Label>
           )}
         </TableCell>
