@@ -17,6 +17,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
+import LoadingIndicator from 'src/components/LoadingIndicator';
 import EmptyTable from '../table-no-data';
 import { PatientsTableRow } from '../patients-table-row';
 import { PatientsTableHead } from '../patients-table-head';
@@ -26,11 +27,10 @@ import { PatientsTableToolbar } from '../patients-table-toolbar';
 import NewPatientForm from '../../../layouts/components/new-patient-form';
 
 import useFetchPatients from '../../../hooks/useFetchPatients';
-import LoadingIndicator from 'src/components/LoadingIndicator';
 
 export function PatientsView() {
   const table = useTable();
-  const { patientDetails, loading, error } = useFetchPatients();
+  const { patientDetails, loading } = useFetchPatients();
 
   const [filterName, setFilterName] = useState('');
   const [open, setOpen] = useState(false);
