@@ -5,13 +5,11 @@ import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
 import { varAlpha } from 'src/theme/styles';
-import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
 export const HomePage = lazy(() => import('src/pages/home'));
-export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 // ----------------------------------------------------------------------
@@ -35,26 +33,16 @@ export function Router() {
   return useRoutes([
     // Only rener dashboard view if authenticated
     {
-      element: isAuthenticated ? (
+      element: (
         <DashboardLayout>
           <Suspense fallback={renderFallback}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
-      ) : (
-        <Navigate to="/sign-in" replace />
       ),
       children: [
-        { path: '/', element: <HomePage />, index: true }, // Dashboard/Home is default after login
+        { path: '/', element: <HomePage />, index: true }, // Dashboard/Home is default
       ],
-    },
-    {
-      path: 'sign-in',
-      element: (
-        <AuthLayout>
-          <SignInPage />
-        </AuthLayout>
-      ),
     },
     // 404 Route
     {
