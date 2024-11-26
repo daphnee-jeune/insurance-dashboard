@@ -89,28 +89,29 @@ export function PatientsView() {
                 {loading ? (
                   <LoadingIndicator />
                 ) : (
-                  filteredPatients
-                    ?.slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row) => (
-                      <PatientsTableRow
-                        key={row.firstName + row.lastName}
-                        row={row}
-                        selected={table.selected.includes(`${row.firstName} ${row.lastName}`)}
-                        onSelectRow={() => table.onSelectRow(`${row.firstName} ${row.lastName}`)}
+                  <>
+                    {filteredPatients
+                      ?.slice(
+                        table.page * table.rowsPerPage,
+                        table.page * table.rowsPerPage + table.rowsPerPage
+                      )
+                      .map((row) => (
+                        <PatientsTableRow
+                          key={row.firstName + row.lastName}
+                          row={row}
+                          selected={table.selected.includes(`${row.firstName} ${row.lastName}`)}
+                          onSelectRow={() => table.onSelectRow(`${row.firstName} ${row.lastName}`)}
+                        />
+                      ))}
+                    <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
+                    {(patientNotFound || isTableEmpty) && (
+                      <EmptyTable
+                        searchQuery={filterName}
+                        isTableEmpty={isTableEmpty}
+                        handleOpen={handleOpen}
                       />
-                    ))
-                )}
-
-                <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
-                {(patientNotFound || isTableEmpty) && (
-                  <EmptyTable
-                    searchQuery={filterName}
-                    isTableEmpty={isTableEmpty}
-                    handleOpen={handleOpen}
-                  />
+                    )}
+                  </>
                 )}
               </TableBody>
             </Table>
