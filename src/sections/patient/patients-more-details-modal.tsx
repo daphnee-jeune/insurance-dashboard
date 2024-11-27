@@ -33,7 +33,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [showErrorToast, setShowErrorToast] = useState(false);
 
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
-
+  const birthYear = row.dateOfBirth.split('-')[0];
   const handleClose = () => setOpen(false);
   const {
     firstName,
@@ -253,7 +253,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
               {Math.floor(Math.random() / 2) ? 'Male' : 'Female'}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Age: {Math.floor(Math.random() * 50)}
+              Age: {2024  - Number(birthYear)}
             </Typography>
           </Box>
           <Divider flexItem />
