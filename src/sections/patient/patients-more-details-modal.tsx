@@ -33,7 +33,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
   const [showErrorToast, setShowErrorToast] = useState(false);
 
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
-
+  const birthYear = row.dateOfBirth.split('-')[0];
   const handleClose = () => setOpen(false);
   const {
     firstName,
@@ -83,6 +83,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
 
       setEditedRow((prev) => ({
         ...prev,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         [parentField]: {
           ...(prev[parentField] || {}), // Ensure the parent field exists
           [childField]: value,
@@ -214,7 +215,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     return (
       <>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Blood type: {bloodTypes[Math.floor(Math.random() * bloodTypes.length - 1)]}
+          Blood type: {bloodTypes[Math.floor(Math.random() * (bloodTypes.length - 1))]}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           Address: {street} {address2} {city} {state} {zipcode} {country}
@@ -252,7 +253,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
               {Math.floor(Math.random() / 2) ? 'Male' : 'Female'}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Age: {Math.floor(Math.random() * 50)}
+              Age: {2024  - Number(birthYear)}
             </Typography>
           </Box>
           <Divider flexItem />
