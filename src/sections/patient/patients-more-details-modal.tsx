@@ -83,6 +83,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
 
       setEditedRow((prev) => ({
         ...prev,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         [parentField]: {
           ...(prev[parentField] || {}), // Ensure the parent field exists
           [childField]: value,
@@ -214,7 +215,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
     return (
       <>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Blood type: {bloodTypes[Math.floor(Math.random() * bloodTypes.length - 1)]}
+          Blood type: {bloodTypes[Math.floor(Math.random() * (bloodTypes.length - 1))]}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           Address: {street} {address2} {city} {state} {zipcode} {country}
