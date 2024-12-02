@@ -33,6 +33,9 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [action, setAction] = useState('');
+  const [currentAddressField, setCurrentAddressField] =
+    useState<keyof PatientDetails['address']>('street');
+  const addressFields: (keyof PatientDetails['address'])[] = ['street', 'city', 'state', 'zipcode'];
 
   const statusesOptions = ['Churned', 'Onboarding', 'Inquiry', 'Active'];
 
@@ -92,6 +95,11 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         },
       }));
     };
+  const handleNextEditableField = () => {
+    const currentIndex = addressFields.indexOf(currentAddressField);
+    const nextIndex = (currentIndex + 1) % addressFields.length;
+    setCurrentAddressField(addressFields[nextIndex]);
+  };
 
   return (
     <>
@@ -125,32 +133,21 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         {/* Editable Address */}
         <TableCell>
           {isInEditMode ? (
-            <Box display="flex" gap={1}>
+            <TableCell style={{ display: 'flex'}}>
               <TextField
-                label="Street"
-                value={editedRow.address.street}
-                onChange={handleAddressChange('street')}
+                label={currentAddressField.charAt(0).toUpperCase() + currentAddressField.slice(1)}
+                value={editedRow.address[currentAddressField]}
+                onChange={handleAddressChange(currentAddressField)}
                 size="small"
+                fullWidth
               />
-              <TextField
-                label="City"
-                value={editedRow.address.city}
-                onChange={handleAddressChange('city')}
-                size="small"
-              />
-              <TextField
-                label="State"
-                value={editedRow.address.state}
-                onChange={handleAddressChange('state')}
-                size="small"
-              />
-              <TextField
-                label="Zipcode"
-                value={editedRow.address.zipcode}
-                onChange={handleAddressChange('zipcode')}
-                size="small"
-              />
-            </Box>
+              <Button
+                color="primary"
+                onClick={handleNextEditableField}
+              >
+                Next
+              </Button>
+            </TableCell>
           ) : (
             `${editedRow.address.street} ${editedRow.address.city} ${editedRow.address.state} ${editedRow.address.zipcode} ${editedRow.address.country}`
           )}
