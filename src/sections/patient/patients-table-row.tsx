@@ -22,11 +22,9 @@ import PatientPopoverMenu from './patients-popover-menu';
 
 type PatientTableRowProps = {
   row: PatientDetails;
-  selected: boolean;
-  onSelectRow: () => void;
 };
 
-export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRowProps) {
+export function PatientsTableRow({ row }: PatientTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [isInEditMode, setIsInEditMode] = useState(false);
   const [editedRow, setEditedRow] = useState(row);
@@ -103,7 +101,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
+      <TableRow hover tabIndex={-1} role="checkbox">
         {/* Editable fields for Name */}
         <TableCell component="th" scope="row">
           <Box gap={2} display="flex" alignItems="center">

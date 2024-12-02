@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import {
   Box,
@@ -99,8 +99,6 @@ export function PatientsView() {
                         <PatientsTableRow
                           key={row.firstName + row.lastName}
                           row={row}
-                          selected={table.selected.includes(`${row.firstName} ${row.lastName}`)}
-                          onSelectRow={() => table.onSelectRow(`${row.firstName} ${row.lastName}`)}
                         />
                       ))}
                     <TableEmptyRows emptyRows={table.rowsPerPage - filteredPatients.length} />
