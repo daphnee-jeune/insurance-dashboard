@@ -21,7 +21,6 @@ import EmptyTable from '../table-no-data';
 import { PatientsTableRow } from '../patients-table-row';
 import { PatientsTableHead } from '../patients-table-head';
 import { TableEmptyRows } from '../table-empty-rows';
-import { PatientsTableToolbar } from '../patients-table-toolbar';
 
 import NewPatientForm from '../../../layouts/components/new-patient-form';
 
@@ -64,15 +63,6 @@ export function PatientsView() {
       </Box>
       {open && <NewPatientForm open={open} setOpen={setOpen} />}
       <Card>
-        <PatientsTableToolbar
-          numSelected={table.selected.length}
-          filterName={filterName}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
-          }}
-        />
-
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
