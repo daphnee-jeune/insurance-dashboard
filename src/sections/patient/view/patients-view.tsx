@@ -11,7 +11,6 @@ import {
   TablePagination,
 } from '@mui/material';
 
-import { _users } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';

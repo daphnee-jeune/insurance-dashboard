@@ -16,7 +16,7 @@ import { Iconify } from 'src/components/iconify';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { PatientDetails } from '../../hooks/useFetchPatients';
 
-import Toast from '../../layouts/components/Toast';
+import Toast from '../../layouts/components/success-error-toast';
 import { db } from '../../firebase';
 import PatientPopoverMenu from './patients-popover-menu';
 
@@ -133,7 +133,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         {/* Editable Address */}
         <TableCell>
           {isInEditMode ? (
-            <TableCell style={{ display: 'flex'}}>
+            <TableCell style={{ display: 'flex' }}>
               <TextField
                 label={currentAddressField.charAt(0).toUpperCase() + currentAddressField.slice(1)}
                 value={editedRow.address[currentAddressField]}
@@ -141,10 +141,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
                 size="small"
                 fullWidth
               />
-              <Button
-                color="primary"
-                onClick={handleNextEditableField}
-              >
+              <Button color="primary" onClick={handleNextEditableField}>
                 Next
               </Button>
             </TableCell>

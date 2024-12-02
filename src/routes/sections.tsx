@@ -28,10 +28,7 @@ const renderFallback = (
 );
 
 export function Router() {
-  const isAuthenticated = true
-
   return useRoutes([
-    // Only rener dashboard view if authenticated
     {
       element: (
         <DashboardLayout>

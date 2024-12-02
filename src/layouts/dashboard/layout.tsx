@@ -7,7 +7,7 @@ import { useTheme } from '@mui/material/styles';
 
 import { Main } from './main';
 import { layoutClasses } from '../classes';
-import { NavMobile, NavDesktop } from './nav';
+import { NavDesktop } from './nav';
 import { navData } from '../config-nav-dashboard';
 import { _workspaces } from '../config-nav-workspace';
 import { MenuButton } from '../components/menu-button';
@@ -60,12 +60,6 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
                     ml: -1,
                     [theme.breakpoints.up(layoutQuery)]: { display: 'none' },
                   }}
-                />
-                <NavMobile
-                  data={navData}
-                  open={navOpen}
-                  onClose={() => setNavOpen(false)}
-                  workspaces={_workspaces}
                 />
               </>
             ),

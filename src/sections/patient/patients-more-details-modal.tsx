@@ -5,7 +5,7 @@ import { PatientDetails } from '../../hooks/useFetchPatients';
 import { db } from '../../firebase';
 import { ExtraField } from '../../layouts/components/new-patient-form';
 
-import Toast from '../../layouts/components/Toast';
+import Toast from '../../layouts/components/success-error-toast';
 
 const style = {
   p: 4,
@@ -253,7 +253,7 @@ const MoreDetailsModal = ({ open, setOpen, row }: MoreDetailsModalProps) => {
               {Math.floor(Math.random() / 2) ? 'Male' : 'Female'}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Age: {2024  - Number(birthYear)}
+              Age: {2024 - Number(birthYear)}
             </Typography>
           </Box>
           <Divider flexItem />

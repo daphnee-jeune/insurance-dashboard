@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
-import Toast from './Toast';
+import Toast from './success-error-toast';
 
 type Address = {
   street: string;
