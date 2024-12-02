@@ -75,34 +75,23 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
     }
   };
 
-  const handleChange = (field: string, value: string |  Record<string, any>) => {
+  const handleChange = (field: string, value: string | Record<string, any>) => {
     setEditedRow((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const getEditableAddressFieldValue = (address: {
-    street: string;
-    state: string;
-    zipcode: string;
-    country: string;
-  }) => `${address.street} ${address.state} ${address.zipcode} ${address.country}`;
-
-  const handleAddressChange = (value: string) => {
-    const parts = value.split(' '); // split the input into parts
-    setEditedRow((prev) => ({
-      ...prev,
-      address: {
-        street: parts.slice(0, -3).join(' ') || '',
-        address2: '',
-        city: parts[parts.length - 4] || '',
-        state: parts[parts.length - 3] || '',
-        zipcode: parts[parts.length - 2] || '',
-        country: parts[parts.length - 1] || '',
-      },
-    }));
-  };
+  const handleAddressChange =
+    (field: keyof PatientDetails['address']) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setEditedRow((prev) => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [field]: event.target.value,
+        },
+      }));
+    };
 
   return (
     <>
@@ -136,16 +125,34 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
         {/* Editable Address */}
         <TableCell>
           {isInEditMode ? (
-            <>
+            <Box display="flex" gap={1}>
               <TextField
-                fullWidth
-                value={getEditableAddressFieldValue(editedRow.address)}
-                onChange={(e) => handleAddressChange(e.target.value)}
+                label="Street"
+                value={editedRow.address.street}
+                onChange={handleAddressChange('street')}
                 size="small"
               />
-            </>
+              <TextField
+                label="City"
+                value={editedRow.address.city}
+                onChange={handleAddressChange('city')}
+                size="small"
+              />
+              <TextField
+                label="State"
+                value={editedRow.address.state}
+                onChange={handleAddressChange('state')}
+                size="small"
+              />
+              <TextField
+                label="Zipcode"
+                value={editedRow.address.zipcode}
+                onChange={handleAddressChange('zipcode')}
+                size="small"
+              />
+            </Box>
           ) : (
-            `${editedRow.address.street}, ${editedRow.address.city} ${editedRow.address.state} ${editedRow.address.zipcode} ${editedRow.address.country}`
+            `${editedRow.address.street} ${editedRow.address.city} ${editedRow.address.state} ${editedRow.address.zipcode} ${editedRow.address.country}`
           )}
         </TableCell>
         {/* Editable DOB */}
@@ -162,7 +169,7 @@ export function PatientsTableRow({ row, selected, onSelectRow }: PatientTableRow
               year: 'numeric',
               month: 'long',
               day: '2-digit',
-              timeZone: 'UTC'
+              timeZone: 'UTC',
             })
           )}
         </TableCell>
