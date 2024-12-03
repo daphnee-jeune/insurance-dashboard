@@ -26,6 +26,7 @@ import NewPatientForm from '../../../layouts/components/new-patient-form';
 
 import useFetchPatients from '../../../hooks/useFetchPatients';
 import useTable from '../../../hooks/useTable';
+import { PatientsTableToolbar } from '../patients-table-toolbar';
 
 export function PatientsView() {
   const table = useTable();
@@ -63,6 +64,14 @@ export function PatientsView() {
       </Box>
       {open && <NewPatientForm open={open} setOpen={setOpen} />}
       <Card>
+      <PatientsTableToolbar
+          numSelected={table.selected.length}
+          filterName={filterName}
+          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setFilterName(event.target.value);
+            table.onResetPage();
+          }}
+        />
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
